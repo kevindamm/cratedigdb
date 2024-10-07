@@ -1,9 +1,9 @@
-# go-vinyl
+# cratedig
 
 Go+Gin web service storing my vinyl collection and serving it as a web app
 
 The skeleton of this code is from the [golang tutorial for writing a web service
-](https://go.dev/doc/tutorial/web-service-gin).  It's a good tutorial, if you're
+](https://go.dev/doc/tutorial/web-service-gin). It's a good tutorial, if you're
 interested in this code you should read through that too.
 
 The schema used here is a departure from the tutorial, it uses the same schema
@@ -33,17 +33,20 @@ information is written once and permanently set.
 
 The collection information is also in a flat file but it will be moved into a
 proper RDBMS after enough of the collection schema is defined and
-after the collection data itself has been more fully populated.  *(KISS principle)*
+after the collection data itself has been more fully populated. _(KISS principle)_
 
-* releases/
+- releases/
 
-* masters/
+  - 
 
-* artists/
+- artists/
 
-* labels/
+- instruments/
 
-* collection/
+- collection/
+
+  - releases.json
+  - artists.json
 
 ## Developing and deploying
 
