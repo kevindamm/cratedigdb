@@ -29,8 +29,9 @@ type ReleaseParams struct {
 
 // Releases are specific versions of an Album,
 type Release struct {
-	DiscogsID     int `json:"id"`
-	MusicBrainzID int `json:"mbid"`
+	DiscogsID     int    `json:"id"`
+	MusicBrainzID int    `json:"mbid"`
+	Title         string `json:"title"`
 
 	Artists []Artist `json:"artists"`
 	Country string   `json:"country"`

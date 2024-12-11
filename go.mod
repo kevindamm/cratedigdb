@@ -1,4 +1,4 @@
-module github.com/kevindamm/go-vinyl
+module github.com/kevindamm/cratedig
 
 go 1.23.0
 
