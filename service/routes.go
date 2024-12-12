@@ -30,18 +30,6 @@ import (
 	"github.com/kevindamm/cratedig"
 )
 
-func DefineRoutes(router *gin.Engine) error {
-	//router.StaticFile("/favicon.ico", "./service/resources/favicon.ico")
-	router.LoadHTMLGlob("./templates/*.html")
-
-	router.GET("/records", getAlbums)
-	router.GET("/records/:id/", getAlbumById)
-	router.POST("/records/:id/add", addToCollection)
-
-	return nil
-}
-
-// Some test data just to get started.
 var albums = []cratedig.Release{
 	{
 		DiscogsID: 1001,

@@ -26,8 +26,8 @@ package cratedig
 // identified by their discogs ID and MusicBrainz ID;
 // type unifies with the structure of Discogs response.
 type Artist struct {
-	DiscogsID     int      `json:"id"`
-	MusicBrainzID int      `json:"mbid"`
+	DiscogsID     string   `json:"id"`
+	MusicBrainzID int      `json:"mbid,omitempty"`
 	Name          string   `json:"name"`
 	ANV           []string `json:"namevariations,omitempty"`
 
