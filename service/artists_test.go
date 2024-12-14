@@ -23,13 +23,11 @@
 package service
 
 import (
-	"encoding/json"
 	"net/http"
 	"net/http/httptest"
 	"strings"
 	"testing"
 
-	"github.com/kevindamm/cratedig"
 	"github.com/labstack/echo"
 	"github.com/stretchr/testify/assert"
 )
@@ -40,14 +38,15 @@ func TestGetArtist(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	request := httptest.NewRequest(http.MethodGet, "/", nil)
 	ctx := echos.NewContext(request, recorder)
-	artist := cratedig.Artist{}
-	artistJSON, _ := json.Marshal(artist)
+	ctx.SetPath("/artist/:artist_id")
+	ctx.SetParamNames("artist_id")
+	ctx.SetParamValues("1234")
 
 	// Assert
 	handler := TestHandler()
 	if assert.NoError(t, handler.getArtist(ctx)) {
 		assert.Equal(t, http.StatusOK, recorder.Code)
-		assert.Equal(t, artistJSON, recorder.Body.String())
+		assert.Equal(t, ahhMayZing+"\n", recorder.Body.String())
 	}
 }
 

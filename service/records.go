@@ -18,26 +18,38 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/testutil.go
+// github:kevindamm/cratedig/service/records.go
 
 package service
 
-import "github.com/kevindamm/cratedig"
+import (
+	"fmt"
+	"net/http"
 
-func TestHandler() *server {
-	// this will be updated as we incrementally upgrade the backing store.
-	server := NewInMemoryHandler(0, true)
-	server.RegisterAPIRoutes()
+	"github.com/kevindamm/cratedig"
+	"github.com/labstack/echo"
+)
 
-	server.artists_table = map[string]*cratedig.Artist{
-		"1234": {
-			DiscogsID: "1234",
-			Name:      "ahhMayZing",
-			Profile:   "aspiring DJ, sharing my journey with anyone willing to listen 💙",
-		},
+// A record is a specific album version.
+// (in discogs it is either a release or a collection's item)
+
+func (server *server) getRecord(ctx echo.Context) error {
+	record_id := ctx.Param("record_id")
+	record, found := server.records_table[record_id]
+	if !found {
+		return echo.NewHTTPError(http.StatusNotFound,
+			fmt.Sprintf("record %s not found", record_id))
 	}
-	server.albums_table = make(map[string]*cratedig.Album)
-	server.records_table = make(map[string]*cratedig.Record)
+	return ctx.JSON(http.StatusOK, record)
+}
 
-	return server
+func (server *server) addRecord(ctx echo.Context) error {
+	record := new(cratedig.Record)
+	if err := ctx.Bind(record); err != nil {
+		return err
+	}
+
+	// TODO pre-check whether record has already been added.
+	server.records_table[record.DiscogsID] = record
+	return ctx.JSON(http.StatusCreated, record)
 }

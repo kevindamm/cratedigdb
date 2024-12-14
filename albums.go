@@ -18,26 +18,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/testutil.go
+// github:kevindamm/cratedig/releases.go
 
-package service
+package cratedig
 
-import "github.com/kevindamm/cratedig"
+type AlbumParams struct {
+	AlbumID  int          `param:"album_id"`
+	Currency CurrencyEnum `param:"curr_abbr"`
+}
 
-func TestHandler() *server {
-	// this will be updated as we incrementally upgrade the backing store.
-	server := NewInMemoryHandler(0, true)
-	server.RegisterAPIRoutes()
+// An album describes all related record variants.
+type Album struct {
+	DiscogsID     string `json:"id"`
+	MusicBrainzID int    `json:"mbid"`
+	Title         string `json:"title"`
 
-	server.artists_table = map[string]*cratedig.Artist{
-		"1234": {
-			DiscogsID: "1234",
-			Name:      "ahhMayZing",
-			Profile:   "aspiring DJ, sharing my journey with anyone willing to listen 💙",
-		},
-	}
-	server.albums_table = make(map[string]*cratedig.Album)
-	server.records_table = make(map[string]*cratedig.Record)
+	Artists []Artist `json:"artists"`
+	Country string   `json:"country"`
+}
 
-	return server
+// Statistics about a release.
+type AlbumStats struct {
+	CountHave uint `json:"num_have"`
+	CountWant uint `json:"num_want"`
 }

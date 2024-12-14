@@ -52,7 +52,7 @@ func main() {
 	}
 
 	server := service.NewInMemoryHandler(*port, *debug)
-	server.RouteAPI()
+	server.RegisterAPIRoutes()
 	// TODO other routes
 
 	// Create a done channel to signal when the shutdown is complete

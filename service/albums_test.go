@@ -18,27 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/releases.go
+// github:kevindamm/cratedig/service/albums_test.go
 
-package cratedig
+package service
 
-type ReleaseParams struct {
-	ReleaseID int          `param:"release_id"`
-	Currency  CurrencyEnum `param:"curr_abbr"`
+import "testing"
+
+func TestGetAlbum(t *testing.T) {
+	// Setup
+
+	// Assert
 }
 
-// Releases are specific versions of an Album,
-type Release struct {
-	DiscogsID     int    `json:"id"`
-	MusicBrainzID int    `json:"mbid"`
-	Title         string `json:"title"`
+func TestAddAlbum(t *testing.T) {
+	// Setup
 
-	Artists []Artist `json:"artists"`
-	Country string   `json:"country"`
-}
-
-// Statistics about a release.
-type ReleaseStats struct {
-	CountHave uint `json:"num_have"`
-	CountWant uint `json:"num_want"`
+	// Assert
 }

@@ -18,26 +18,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/testutil.go
+// github:kevindamm/cratedig/service/albums.go
 
 package service
 
-import "github.com/kevindamm/cratedig"
+import (
+	"fmt"
+	"net/http"
 
-func TestHandler() *server {
-	// this will be updated as we incrementally upgrade the backing store.
-	server := NewInMemoryHandler(0, true)
-	server.RegisterAPIRoutes()
+	"github.com/kevindamm/cratedig"
+	"github.com/labstack/echo"
+)
 
-	server.artists_table = map[string]*cratedig.Artist{
-		"1234": {
-			DiscogsID: "1234",
-			Name:      "ahhMayZing",
-			Profile:   "aspiring DJ, sharing my journey with anyone willing to listen 💙",
-		},
+func (server *server) getAlbum(ctx echo.Context) error {
+	album_id := ctx.Param("album_id")
+	album, found := server.albums_table[album_id]
+	if !found {
+		return echo.NewHTTPError(http.StatusNotFound,
+			fmt.Sprintf("album %s not found", album_id))
 	}
-	server.albums_table = make(map[string]*cratedig.Album)
-	server.records_table = make(map[string]*cratedig.Record)
+	return ctx.JSON(http.StatusOK, album)
+}
 
-	return server
+func (server *server) addAlbum(ctx echo.Context) error {
+	album := new(cratedig.Album)
+	if err := ctx.Bind(album); err != nil {
+		return err
+	}
+
+	server.albums_table[album.DiscogsID] = album
+	return ctx.JSON(http.StatusCreated, album)
 }

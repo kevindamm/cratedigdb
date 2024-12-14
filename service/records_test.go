@@ -18,26 +18,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/testutil.go
+// github:kevindamm/cratedig/service/records_test.go
 
 package service
 
-import "github.com/kevindamm/cratedig"
+import "testing"
 
-func TestHandler() *server {
-	// this will be updated as we incrementally upgrade the backing store.
-	server := NewInMemoryHandler(0, true)
-	server.RegisterAPIRoutes()
+func TestGetRecord(t *testing.T) {
+	// Setup
 
-	server.artists_table = map[string]*cratedig.Artist{
-		"1234": {
-			DiscogsID: "1234",
-			Name:      "ahhMayZing",
-			Profile:   "aspiring DJ, sharing my journey with anyone willing to listen 💙",
-		},
-	}
-	server.albums_table = make(map[string]*cratedig.Album)
-	server.records_table = make(map[string]*cratedig.Record)
+	// Assert
+}
 
-	return server
+func TestAddRecord(t *testing.T) {
+	// Setup
+
+	// Assert
 }

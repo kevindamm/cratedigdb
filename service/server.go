@@ -28,7 +28,6 @@ import (
 	"io"
 	"log"
 	"net/http"
-	"sync"
 	"time"
 
 	"github.com/kevindamm/cratedig"
@@ -41,12 +40,12 @@ type server struct {
 	port int
 
 	echos *echo.Echo
-	lock  sync.Mutex
 	debug bool
 
 	// naive DB tables while routes, etc. defined
-	artists_table  map[string]*cratedig.Artist
-	releases_table map[string]*cratedig.Release
+	artists_table map[string]*cratedig.Artist
+	albums_table  map[string]*cratedig.Album
+	records_table map[string]*cratedig.Record
 }
 
 func NewInMemoryHandler(port int, debug bool) *server {
@@ -76,8 +75,9 @@ func NewInMemoryHandler(port int, debug bool) *server {
 	return server
 }
 
-func (handler *server) RouteAPI() {
-
+func (handler *server) RegisterAPIRoutes() {
+	handler.echos.GET("/artist/:artist_id", handler.getArtist)
+	handler.echos.POST("/artist/:artist_id", handler.addArtist)
 }
 
 func (server *server) ServeLocalhost(port int) error {
