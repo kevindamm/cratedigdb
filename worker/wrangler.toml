@@ -1,0 +1,24 @@
+#:schema node_modules/wrangler/config-schema.json
+name = "cratedig"
+main = "router.ts"
+compatibility_date = "2025-01-09"
+
+# https://developers.cloudflare.com/workers/observability/logs/workers-logs/
+[observability]
+enabled = true
+
+# D1: https://developers.cloudflare.com/d1/
+# [[d1_databases]]
+# binding = "DB"
+# database_name = "cratedig-db"
+# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+
+# R2: https://developers.cloudflare.com/r2/
+# [[r2_buckets]]
+# binding = "IMAGES"
+# bucket_name = "cover-art"
+
+# Vectorize: https://developers.cloudflare.com/vectorize
+# [[vectorize]]
+# binding = "VECTORS"
+# index_name = "media-index"
