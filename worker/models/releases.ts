@@ -20,27 +20,33 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/artists.ts
+// github:kevindamm/cratedig/worker/models/releases.ts
 
-import { Int, Str } from "chanfana"
+import { Int, DateTime } from "chanfana"
 import { z } from "zod"
 import { DataQuality } from "./types"
 
-export const Artist = z.object({
+export const Release = z.object({
   id: Int().gt(0),
   data_quality: DataQuality,
 
-  name: Str(),
-  real_name: Str(),
-  profile: Str(),
-  anv: z.array(Str()),
-  aliases: z.array(Str()),
-  urls: z.array(Str().url()),
+  title: z.string(),
+  thumb: z.string().url(),
+  year: z.string(),  // pattern: \d{4}
 
-  masters: z.array(Str()),
-  releases: z.array(Str()),
-  category: Str(),
+  country: z.string(),
+  tracklist: z.array(z.string()),  // TODO type this out
+  artists: z.array(Int()),
+  credits: z.array(Int()),
+  notes: z.string(),
+})
 
-  groups: z.array(Str()),
-  members: z.array(Str()),
+export const ReleaseVersion = z.object({
+  id: Int().gt(0),
+  data_quality: DataQuality,
+  main_release: Int().gt(0),
+
+  title: z.string(),
+  when: DateTime(),
+  notes: z.string(),
 })

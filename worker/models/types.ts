@@ -20,27 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/artists.ts
+// github:kevindamm/cratedig/worker/models/types.ts
 
-import { Int, Str } from "chanfana"
 import { z } from "zod"
-import { DataQuality } from "./types"
 
-export const Artist = z.object({
-  id: Int().gt(0),
-  data_quality: DataQuality,
-
-  name: Str(),
-  real_name: Str(),
-  profile: Str(),
-  anv: z.array(Str()),
-  aliases: z.array(Str()),
-  urls: z.array(Str().url()),
-
-  masters: z.array(Str()),
-  releases: z.array(Str()),
-  category: Str(),
-
-  groups: z.array(Str()),
-  members: z.array(Str()),
-})
+export const DataQuality = z.enum([
+  "New Submission",
+  "Recently Edited",
+  "Correct",
+  "Needs Vote",
+  "Needs Major Changes",
+  "Needs Minor Changes",
+  "Entirely Incorrect",
+])

@@ -22,7 +22,7 @@
 //
 // github:kevindamm/cratedig/worker/models/records.ts
 
-import { DateTime, Enumeration, Int, Str, Uuid } from "chanfana"
+import { DateTime, Int, Str } from "chanfana"
 import { z } from "zod"
 
 // A single instance of a musical release,
@@ -36,7 +36,7 @@ export const Record = z.object({
   media_format: z.enum(["Vinyl", "CD", "Laserdisc", "Tape", "Floppy", "Download"]),
 
   when: DateTime(),
-  media_grade: z.enum(["Mint", "NM", "NM-", "VG+", "Good", "Fair", "Poor"]).optional(),
-  sleeve_grade: z.enum(["Mint", "NM",  "NM-", "VG+", "Good", "Fair", "Poor"]).optional(),
+  media_grade: z.enum(["Mint", "M-", "NM", "VG+", "Good", "Fair", "Poor"]).optional(),
+  sleeve_grade: z.enum(["Mint", "M-", "NM", "VG+", "Good", "Fair", "Poor"]).optional(),
   notes: Str(),
 })
