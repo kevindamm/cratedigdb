@@ -1,0 +1,172 @@
+/*
+  Partially based on HTML5 Boilerplate v9.0.1
+  MIT License | https://html5boilerplate.com/
+
+  Copyright (c) 2025, Kevin Damm
+  also under MIT License, see github.com/kevindamm/cratedig
+*/
+
+/* Reset styles for cross-browser conformity. */
+
+html {
+  color: #2B2B2B;
+  font-size: 1em;
+  line-height: 1.4;
+}
+
+/* remove text-shadow in selection highlight */
+::-moz-selection {
+  text-shadow: none;
+}
+::selection {
+  text-shadow: none;
+}
+
+/* better-looking default horizontal rule */
+hr {
+  display: block;
+  height: 1px;
+  border: 0;
+  border-top: 1px solid #ccc;
+  margin: 1em 0;
+  padding: 0;
+}
+
+/* remove unnecessary gaps between media render and their containers */
+audio,
+canvas,
+iframe,
+img,
+svg,
+video {
+  vertical-align: middle;
+}
+
+fieldset {
+  border: 0;
+  margin: 0;
+  padding: 0;
+}
+
+/* opinionated constraint on textarea resizing */
+textarea {
+  resize: vertical;
+}
+
+/* Visibility rules
+   ================ */
+
+/* hide from both rendering and screen readers */
+[hidden] {
+  display: none !important;
+}
+
+/* hide from both but maintain layout */
+[invisible] {
+  display: hidden;
+}
+
+/* hidden visually but available for screen readers:
+https://snook.ca/archives/html_and_css/hiding-content-for-accessibility
+
+Also appropriately handles text content which can trip up the screen
+reader when the small width leaves each word on its own line.
+https://medium.com/@jessebeach/beware-smushed-off-screen-accessible-text-5952a4c2cbfe
+*/
+.audible-hidden {
+  position: absolute; overflow: hidden;
+  width: 1px; height: 1px;
+  clip: rect(0, 0, 0, 0);
+  border: 0; padding: 0; margin: -1px;
+  white-space: nowrap;
+}
+
+/* contain floats */
+.clearfix::before,
+.clearfix::after {
+  content: "";
+  display: block;
+}
+.clearfix::after {
+  clear: both;
+}
+
+/* Responsive Design
+   ================= */
+
+/* screens with larger (non-mobile) viewports */
+@media only screen and (min-width: 35em) {
+  /* TODO style adjustments for viewports that meet the condition */
+}
+
+/* screens with very high resolution */
+@media print,
+  (-webkit-min-device-pixel-ratio: 1.25),
+  (min-resolution: 1.25dppx),
+  (min-resolution: 120dpi) {
+  /* TODO style adjustments for visual content to give more information density. */
+}
+
+/* Printed Media
+   ============= */
+
+@media print {
+  *,
+  *::before,
+  *::after {
+    background: #fff !important;
+    color: #000 !important;
+    /* Black prints faster */
+    box-shadow: none !important;
+    text-shadow: none !important;
+  }
+
+  a,
+  a:visited {
+    text-decoration: underline;
+  }
+
+  a[href]::after {
+    content: " (" attr(href) ")";
+  }
+
+  abbr[title]::after {
+    content: " (" attr(title) ")";
+  }
+
+  /*
+   * Don't show links that are fragment identifiers,
+   * or use the `javascript:` pseudo protocol
+   */
+  a[href^="#"]::after,
+  a[href^="javascript:"]::after {
+    content: "";
+  }
+
+  pre {
+    white-space: pre-wrap !important;
+  }
+
+  pre,
+  blockquote {
+    border: 1px solid #999;
+    page-break-inside: avoid;
+  }
+
+  tr,
+  img {
+    page-break-inside: avoid;
+  }
+
+  p,
+  h2,
+  h3 {
+    orphans: 3;
+    widows: 3;
+  }
+
+  h2,
+  h3 {
+    page-break-after: avoid;
+  }
+}

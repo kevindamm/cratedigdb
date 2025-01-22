@@ -1,0 +1,31 @@
+doctype html
+html(lang=langCode)
+  head
+    meta(charset='UTF-8')
+    meta(name='viewport' content='width=device-width, initial-scale=1.0')
+    title= pageTitle + ' - ' + siteTitle
+    link(rel='stylesheet' href='/style.css')
+    if description
+      meta(name='description' content=description)
+  
+    meta(property='og:title' content=pageTitle)
+    meta(property='og:type' content='')
+    meta(property='og:url' content=pageURL)
+    if imageURL
+      meta(property='og:image' content=imageURL)
+    if imageAltURL
+      meta(property='og:image:alt' content=imageAltURL)
+
+    link(rel='icon' href='/favicon.ico' sizes='any')
+    //- link(rel='icon' href='/icon.svg' type='image/svg+xml')
+    //- link(rel='apple-touch-icon' href='/icon.png')
+
+    //- link(rel='manifest' href='/site.webmanifest')
+    //- meta(name='theme-color' content='#7F33FF')
+
+  body
+    h1= pageTitle
+    p hi!
+
+    footer
+      p Copyright &copy; 2025, Kevin Damm.  All rights reserved.
