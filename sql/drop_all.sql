@@ -23,10 +23,17 @@
 --
 -- github:kevindamm/cratedig/sql/drop_all.sql
 
-DROP TABLE IF EXISTS "vinyl_tagging";
-DROP TABLE IF EXISTS "tag_names";
-DROP TABLE IF EXISTS "vinyl_records";
-DROP TABLE IF EXISTS "folders";
-DROP TABLE IF EXISTS "usernames";
-DROP TABLE IF EXISTS "user_profiles";
+-- Indices (drop all)
+DROP INDEX IF EXISTS "Vinyl";
+DROP INDEX IF EXISTS "VinylVersions";
+DROP INDEX IF EXISTS "PublicCrates";
+DROP INDEX IF EXISTS "UserCrates";
+DROP INDEX IF EXISTS "Usernames";
 
+-- Tables (drop all)
+DROP TABLE IF EXISTS "VinylTagging";
+DROP TABLE IF EXISTS "TagNames";
+DROP TABLE IF EXISTS "VinylItems";
+DROP TABLE IF EXISTS "Crates";
+DROP TABLE IF EXISTS "Grading";
+DROP TABLE IF EXISTS "UserProfiles";
