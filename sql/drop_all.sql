@@ -23,5 +23,10 @@
 --
 -- github:kevindamm/cratedig/sql/drop_all.sql
 
-DROP TABLE IF EXISTS "collections";
-DROP TABLE IF EXISTS "collection_items";
+DROP TABLE IF EXISTS "vinyl_tagging";
+DROP TABLE IF EXISTS "tag_names";
+DROP TABLE IF EXISTS "vinyl_records";
+DROP TABLE IF EXISTS "folders";
+DROP TABLE IF EXISTS "usernames";
+DROP TABLE IF EXISTS "user_profiles";
+
