@@ -8,10 +8,10 @@ compatibility_date = "2025-01-09"
 enabled = true
 
 # D1: https://developers.cloudflare.com/d1/
-# [[d1_databases]]
-# binding = "DB"
-# database_name = "cratedig-db"
-# database_id = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+[[d1_databases]]
+binding = "DB"
+database_name = "vinyl-db"
+database_id = "931bf6dc-4e8c-4b64-912d-ec1c4403ca28"
 
 # R2: https://developers.cloudflare.com/r2/
 # [[r2_buckets]]
