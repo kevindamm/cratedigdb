@@ -1,6 +1,6 @@
-# **cratedig:** Vinyl Collection 
+# **cratedig:** Vinyl Collection as a Web Service
 
-Implemented on Cloudflare Workers + D1 + R2 + Vectorize.
+Implemented on Cloudflare Workers (serving) + D1 (database) + R2 (cover art and sample media).
 
 A media collection index as a Cloudflare Worker with OpenAPI 3.1 using
 [chanfana](https://github.com/cloudflare/chanfana) and
@@ -35,4 +35,5 @@ The router is defined in `router.ts`.
 
 1. Run `wrangler dev` to start a local instance of the API.
 2. Open `http://localhost:8787/` in your browser to see the Swagger interface where you can try the endpoints.
-3. Changes made in the `src/` folder will automatically trigger the server to reload, you only need to refresh the Swagger interface.
+3. Changes made in the `src/` folder will automatically trigger the server to reload,
+you only need to refresh the Swagger interface.
