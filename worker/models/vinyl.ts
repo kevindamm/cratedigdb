@@ -39,15 +39,18 @@ export const Grading = z.enum([
 // A single instance of a musical release,
 // typically a vinyl record, specified in media_format.
 export const VinylRecord = z.object({
-  vinylID: z.number().int().positive(),
-  releaseID: z.number().int().positive(),
+  userID: z.number().positive().int(),
+  releaseID: z.number().positive().int(),
+  versionID: z.number().positive().int(),
   instance: z.number().int(),
 
-  userID: z.number().int().positive(),
-  folderName: z.string().optional(),
+  crateID: z.string().optional(),
 
-  added: z.string().date().nonempty(),
-  updated: z.string().date(),
+  date_added: z.string().date().nonempty(),
+  date_graded: z.string().date().optional(),
+  date_sold: z.string().date().optional(),
+  date_traded: z.string().date().optional(),
+
   media_grade: Grading.optional(),
   sleeve_grade: Grading.optional(),
 

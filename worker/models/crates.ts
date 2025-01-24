@@ -20,23 +20,23 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/records.ts
+// github:kevindamm/cratedig/worker/models/crates.ts
 
-import { DateTime, Int, Str } from "chanfana"
 import { z } from "zod"
+import { VinylRecord } from "./vinyl"
 
-// A single instance of a musical release,
-// typically a vinyl record, specified in media_format.
-export const Record = z.object({
-  id: Int().gt(0),
+export const VinylCrate = z.object({
+  crateID: z.number().positive().int(),
+  parentID: z.number().optional(),
+  name: z.string().optional(),
+  path: z.string(),
 
-  user_id: Int().gt(0),
-  folder_id: Str().optional(),
-  release_id: Str(),
-  media_format: z.enum(["Vinyl", "CD", "Laserdisc", "Tape", "Floppy", "Download"]),
+  username: z.string().optional(),
+  visible: z.boolean(),
+  notes: z.string(),
+})
 
-  when: DateTime(),
-  media_grade: z.enum(["Mint", "M-", "NM", "VG+", "Good", "Fair", "Poor"]).optional(),
-  sleeve_grade: z.enum(["Mint", "M-", "NM", "VG+", "Good", "Fair", "Poor"]).optional(),
-  notes: Str(),
+export const VinylCrateContents = z.object({
+  crate: VinylCrate,
+  vinyl: z.set(VinylRecord),
 })

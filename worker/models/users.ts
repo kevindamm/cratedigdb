@@ -20,16 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/types.ts
+// github:kevindamm/cratedig/worker/models/users.ts
 
 import { z } from "zod"
 
-export const DataQuality = z.enum([
-  "New Submission",
-  "Recently Edited",
-  "Correct",
-  "Needs Vote",
-  "Needs Major Changes",
-  "Needs Minor Changes",
-  "Entirely Incorrect",
-])
+export const UserProfile = z.object({
+  userID: z.number().int().gt(0),
+  username: z.string().nonempty(),
+  fullname: z.string().nonempty(),
+  discogsID: z.string().optional(),
+
+  about: z.string(),
+  avatarURL: z.string().url().optional(),
+  date_banned: z.string().url().optional(),
+})
