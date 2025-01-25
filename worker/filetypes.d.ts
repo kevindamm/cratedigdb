@@ -20,41 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/router.ts
+// github:kevindamm/cratedig/worker/filetypes.d.ts
 
-import { fromHono } from 'chanfana'
-import { Hono } from 'hono'
-import { WorkerContext } from './api/request'
-import {
-	AddVinylRecord,
-	RemoveVinylRecord,
-	FetchVinylRecord } from './api/vinyl'
-import {
-	AddVinylCrate,
-	RemoveVinylCrate,
-	ListVinylCrate } from './api/crate'
-import { SearchForm, SearchResults } from './api/search'
-
-// Start a Hono app
-const app = new Hono()
-
-// Setup OpenAPI registry
-const openapi = fromHono(app, {
-  docs_url: '/spec',
-})
-
-// Register OpenAPI endpoints
-openapi.get('/search', SearchResults)
-openapi.get('/vinyl', ListVinylCrate)
-
-// Specify middleware and non-API paths.
-function homepage(): (c: WorkerContext) => Promise<Response> {
-	const HOME_HTML = 'hola htmx!'
-	return async (c: WorkerContext) => {
-		return c.html(HOME_HTML)
-	}
+declare module '*.html' {
+  const value: string;
+  export default value
 }
-app.get('/', homepage())
-
-// Export the Hono app
-export default app
+declare module '*.html' {
+  const value: string;
+  export default value
+}
+declare module "*.pug" {
+	const value: ArrayBuffer;
+	export default value;
+}
