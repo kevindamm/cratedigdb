@@ -211,6 +211,8 @@ CREATE TABLE IF NOT EXISTS "VinylItems" (
   , "sleeve_grade"  INTEGER
       NOT NULL
       REFERENCES Grading (gradeID)
+  , "notes"         TEXT
+      NOT NULL    DEFAULT ""
 
   , PRIMARY KEY ("userID", "releaseID", "versionID", "instance")
 
