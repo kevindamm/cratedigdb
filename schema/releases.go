@@ -22,23 +22,22 @@
 
 package cratedig
 
-type AlbumParams struct {
-	AlbumID  int          `param:"album_id"`
-	Currency CurrencyEnum `param:"curr_abbr"`
+type ReleaseParams struct {
+	ReleaseID int          `param:"releaseID"`
+	Currency  CurrencyEnum `param:"curr"`
 }
 
-// An album describes all related record variants.
-type Album struct {
-	DiscogsID     string `json:"id"`
-	MusicBrainzID int    `json:"mbid"`
-	Title         string `json:"title"`
+// A Release describes all related ReleaseVersions.
+type Release struct {
+	ReleaseID string `json:"id"`
+	Title     string `json:"title"`
 
 	Artists []Artist `json:"artists"`
 	Country string   `json:"country"`
 }
 
 // Statistics about a release.
-type AlbumStats struct {
+type ReleaseStats struct {
 	CountHave uint `json:"num_have"`
 	CountWant uint `json:"num_want"`
 }

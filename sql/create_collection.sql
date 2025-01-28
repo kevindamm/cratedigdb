@@ -24,6 +24,8 @@
 -- github:kevindamm/cratedig/sql/create_all.sql
 
 -- 
+-- Database TABLE and INDEX definitions for representing items in a collection.
+--
 -- These tables are in SQLite3 syntax/semantics, that is the flavor imposed by
 -- Cloudflare D1 (as RDBMS for Workers) and easily interfaced with using golang.
 -- 
@@ -62,12 +64,6 @@ CREATE TABLE IF NOT EXISTS "UserProfiles" (
       -- A NULL date_banned value implies the user is not banned.
 );
 
--- The unknown user.
-INSERT INTO UserProfiles
-    ("userID", "username", "fullname", "date_banned")
-  VALUES
-    (0,        "?",        "UNKNOWN",  "2025-01-23");
-
 -- Lookup of user ID by their username.
 CREATE UNIQUE INDEX IF NOT EXISTS "Usernames"
   ON UserProfiles
@@ -85,23 +81,7 @@ CREATE TABLE IF NOT EXISTS "Grading" (
   , "name"    TEXT NOT NULL
   , "quality" INTEGER NOT NULL
 );
-
--- These values based, in part, on the Goldmine Grading Guide at discogs:
--- https://www.discogs.com/selling/resources/how-to-grade-items/
--- except quality, my own approximation based on aggregate calculations, and
--- these quality values may change so derived values may take that into account.
-INSERT INTO Grading
-         ("gradeID", "grade", "name",    "quality")
-  VALUES (0,         "",      "UNKNOWN",        50)
-       , (1,         "M",     "Mint",          100)
-       , (2,         "NM",    "Near Mint",      90)
-       , (3,         "VG+",   "Very Good Plus", 70)
-       , (4,         "VG",    "Very Good",      45)
-       , (5,         "G+",    "Good Plus",      35)
-       , (6,         "G",     "Good",           30)
-       , (7,         "F",     "Fair",           10)
-       , (8,         "P",     "Poor",            5)
-       ;
+-- see create_basedats.sql for the grading definitions.
 
 --
 -- COLLECTIONS
@@ -160,14 +140,6 @@ CREATE TABLE IF NOT EXISTS "Crates" (
   , UNIQUE ("userID", "parentID", "name") 
       ON CONFLICT ROLLBACK
 );
-
--- The folder with ID=0 is the catch-all which everyone implicitly has,
--- but the vinyl table constraint keeps any item from being explicitly in it.
--- Having it reified here can make client state & some queries a little simpler.
-INSERT INTO Crates
-    ("crateID", "userID", "name", "slug", "visible")
-  VALUES
-    (0,          0,       "ALL",  "all",  TRUE);
 
 CREATE UNIQUE INDEX IF NOT EXISTS "UserCrates"
   ON Crates
@@ -256,9 +228,8 @@ CREATE INDEX IF NOT EXISTS "VinylVersions"
 --
 -- Registry of tag names associated with each user and their records.
 --
--- Many-to-many relation for annotating vinyl with tags.  The two IDs need to
--- both be associated with the same user ID in their respective tables, which
--- business logic and the INSERT clause can assist in enforcing.
+-- Many-to-many relation for annotating vinyl with tags, with visibility
+-- restricted to the user's own.
 
 CREATE TABLE IF NOT EXISTS "TagNames" (
     "tagID"    INTEGER  PRIMARY KEY
