@@ -25,14 +25,14 @@
 
 -- BASE DATA
 -- Contains INSERT statements for initial records and relations.
-
--- ASSUMES TABLES HAVE BEEN CREATED; run other create_*.sql scrpts before these.
+--
+-- ASSUMES TABLES HAVE BEEN CREATED; run other create_*.sql scrpts beforehand.
 
 -- The unknown user.
 INSERT INTO UserProfiles
     ("userID", "username", "fullname", "date_banned")
-  VALUES
-    (0,        "--?",      "UNKNOWN",  "2025-01-23");
+  VALUES (  0,      "--?",  "UNKNOWN",  "2025-01-23")
+       ;
 
 -- These values based, in part, on the Goldmine Grading Guide at discogs:
 -- https://www.discogs.com/selling/resources/how-to-grade-items/
@@ -51,11 +51,29 @@ INSERT INTO Grading
        , (8,         "P",     "Poor",            5)
        ;
 
--- The folder with ID=0 is the catch-all which everyone implicitly has,
+-- The folder with crateID=0 is the catch-all which everyone implicitly has,
 -- but the vinyl table constraint keeps any item from being explicitly in it.
 -- Having it reified here can make client state & some queries a little simpler.
 INSERT INTO Crates
     ("crateID", "userID", "name", "slug", "visible")
-  VALUES
-    (0,          0,       "ALL",  "all",  TRUE);
+  VALUES (   0,        0,  "ALL",  "all",      TRUE)
+       ;
 
+-- These values are based on the Voting Guidelines for data quality
+-- https://www.discogs.com/help/voting-guidelines.html
+-- with the numbering of dqID arbitrarily selected by me,
+-- the zero-value being chosen intentionally as the sensible default.
+--
+-- There is an additional entry for submissions with conflicting votes.
+-- The summary values (excepting this new entry) are from the above URL.
+INSERT INTO DataQuality
+    ("dqID", "quality",                 "summary")
+  VALUES (0, "Needs Vote",              "There have not been any votes made on the quality of this artist, release or label data.")
+	     , (1, "Entirely Incorrect",      "For release, artist or label data that is totally incorrect, or so incomplete or badly entered as to be impossible to judge.")
+	     , (2, "Entirely Incorrect Edit", "For updates to the release, artist, or label data that are totally incorrect, or so incomplete or badly entered as to be impossible to judge.")
+	     , (3, "Needs Major Changes",     "For release, artist or label data that need some large or important changes to make it correct.")
+	     , (4, "Needs Minor Changes",     "For release, artist or label data that needs some small changes to make it correct.")
+	     , (5, "Correct",                 "For release, artist or label data that contains good and correct information, up to the minimum standard set in the guidelines.")
+	     , (6, "Disagreement",            "Recent conflicting votes about the data quality (Incorrect and Correct), needs consensus.  Does not include requests for edits that arise from changes in the world.")
+	     , (7, "Complete And Correct",    "For release, artist or label data that is exemplary.")
+       ;

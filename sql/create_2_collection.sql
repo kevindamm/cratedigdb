@@ -113,28 +113,27 @@ CREATE TABLE IF NOT EXISTS "Grading" (
 -- doesn't remove the item itself, it instead becomes unsorted.
 
 CREATE TABLE IF NOT EXISTS "Crates" (
-    "crateID"   INTEGER PRIMARY KEY
-  , "userID"    INTEGER
+    "crateID"       INTEGER
+      PRIMARY KEY
+  , "userID"        INTEGER
       NOT NULL
       REFERENCES UserProfiles (userID)
-      ON DELETE CASCADE
-      ON UPDATE NO ACTION
-  , "parentID"  INTEGER           -- a root crate if parent_id == NULL
+      ON DELETE  CASCADE
+  , "parentID"      INTEGER            -- if parent_id IS NULL, top-level crate
       REFERENCES Crates (crateID)
-      ON DELETE CASCADE
-      ON UPDATE NO ACTION
-      CHECK (parentID <> crateID  -- disallow direct self-inclusion
-      AND    parentID <> 0)       -- crate ID 0 is implicitly 'all crates'
+      ON DELETE  CASCADE
+      CHECK      (parentID <> crateID  -- disallow direct self-inclusion
+                  AND parentID > 0)    -- crate ID 0 is implicitly 'all crates'
+  , "name"          TEXT
+      NOT NULL
 
-  , "visible"   BOOLEAN
-      NOT NULL DEFAULT TRUE       -- defaults to public
-  , "name"      TEXT
+  , "visible"       BOOLEAN
+      NOT NULL   DEFAULT TRUE          -- defaults to public
+  , "slug"          VARCHAR(127)
       NOT NULL
-  , "slug"      VARCHAR(127)
-      NOT NULL
-      CHECK (slug <> "")
-  , "notes"     TEXT
-      NOT NULL DEFAULT ""
+      CHECK      (slug <> "")
+  , "notes"         TEXT
+      NOT NULL   DEFAULT ""
 
   -- No two folders in the same parent folder may have the same name.
   , UNIQUE ("userID", "parentID", "name") 
@@ -154,23 +153,30 @@ CREATE UNIQUE INDEX IF NOT EXISTS "PublicCrates"
 -- we intend to track each individual copy's state of quality, and possession,
 -- and a copy is defined by the user and the specific version of a release.
 CREATE TABLE IF NOT EXISTS "VinylItems" (
-    "userID"        INTEGER  NOT NULL
-      REFERENCES UserProfiles (userID)
-      ON DELETE CASCADE
-      ON UPDATE NO ACTION
-
-  , "releaseID"     INTEGER  NOT NULL
-  , "versionID"     INTEGER  NOT NULL
+    "userID"        INTEGER
+      NOT NULL
+      REFERENCES  UserProfiles (userID)
+      ON DELETE   CASCADE
+  , "releaseID"     INTEGER
+      NOT NULL
+      REFERENCES  Releases (releaseID)
+      ON DELETE   CASCADE
+  , "versionID"     INTEGER
+      NOT NULL
+      REFERENCES  ReleaseVersions (versionID)
+      ON DELETE   CASCADE
   , "instance"      INTEGER
       NOT NULL    DEFAULT 1
       CHECK       (instance > 0)
 
-  -- Exclusive position, in only one crate at a time, or not in any crates.
-  , "crateID"      INTEGER
-      CHECK      (crateID <> 0)  -- zero is reserved for the special 'ALL' crate
+  -- Exclusively exists in only one crate at a time, or (NULL) not in any crate.
+  , "crateID"       INTEGER
+      CHECK       (crateID > 0)  -- zero is reserved for the special 'ALL' crate
                                  -- NULL implies unsorted, only listed with ALL.
+      REFERENCES  Crates (crateID)
+      ON DELETE   SET NULL  -- keep the vinyl (in ALL) if its folder is deleted
 
-  -- Note: all dates are in YYYY-MM-DD format.
+  -- Note: all dates are in YYYY-MM-DD format.  TEXT datatype because of SQLite.
   , "date_added"    TEXT
       NOT NULL    DEFAULT CURRENT_DATE
   , "date_graded"   TEXT  -- if NULL, this item has not been graded
@@ -187,18 +193,6 @@ CREATE TABLE IF NOT EXISTS "VinylItems" (
       NOT NULL    DEFAULT ""
 
   , PRIMARY KEY ("userID", "releaseID", "versionID", "instance")
-
-  -- These keys match the discogs `release` and `master` IDs,
-  -- which will be reflected in tables local to this database
-  -- (in a later version).
-  -- , FOREIGN KEY ("releaseID") ...
-  -- , FOREIGN KEY ("versionID") ...
-
-  , FOREIGN KEY ("crateID")
-      REFERENCES Crates (crateID)
-      ON DELETE SET NULL  -- keep the item in the ALL folder
-      ON UPDATE NO ACTION
-
 ) WITHOUT ROWID;
 
 CREATE INDEX IF NOT EXISTS "Vinyl"
@@ -232,8 +226,10 @@ CREATE INDEX IF NOT EXISTS "VinylVersions"
 -- restricted to the user's own.
 
 CREATE TABLE IF NOT EXISTS "TagNames" (
-    "tagID"    INTEGER  PRIMARY KEY
-  , "userID"   INTEGER  NOT NULL
+    "tagID"    INTEGER
+      PRIMARY KEY
+  , "userID"   INTEGER
+      NOT NULL
       REFERENCES Usernames (userID)
       CHECK (userID <> 0)
 
@@ -241,18 +237,18 @@ CREATE TABLE IF NOT EXISTS "TagNames" (
 );
 
 CREATE TABLE IF NOT EXISTS "VinylTagging" (
-    "userID"     INTEGER NOT NULL
-  , "releaseID"  INTEGER NOT NULL
+    "userID"     INTEGER
+      NOT NULL
+  , "releaseID"  INTEGER
+      NOT NULL
 
-  , "tagID"      INTEGER NOT NULL
-      REFERENCES TagNames (tagID)
-      ON DELETE CASCADE
-      ON UPDATE NO ACTION
+  , "tagID"      INTEGER
+      NOT NULL
+      REFERENCES   TagNames (tagID)
+      ON DELETE    CASCADE
 
   , FOREIGN KEY ("userID", "releaseID")
-      REFERENCES Vinyl (userID, releaseID)
-      ON DELETE CASCADE
-      ON UPDATE NO ACTION
+      REFERENCES   Vinyl (userID, releaseID)
 
   , UNIQUE ("userID", "releaseID", "tagID")
       ON CONFLICT IGNORE
