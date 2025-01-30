@@ -196,9 +196,35 @@ CREATE UNIQUE INDEX IF NOT EXISTS "Artist_Avatar__Unique"
 --
 -- RECORD LABELS
 --
--- ...
+--   [--------]
+--   | Labels |----- +index[Label__Parent]
+--   [--------]
+--       |
+--       |-------[Label_URLs] +index[URL__Label]
+--       |
+--       \----[Label_Avatars] +unique[labelID, imageID]
+--
 
 CREATE TABLE IF NOT EXISTS "Labels" (
+    "labelID"       INTEGER
+      PRIMARY KEY
+  , "name"          TEXT
+      NOT NULL
+      CHECK       (name <> "")
+  
+  , "contact"       TEXT
+  , "profile"       TEXT
+
+  , "parentID"      INTEGER
+      REFERENCES  Labels (labelID)
+      ON DELETE   CASCADE
+  , "parent_name"   TEXT
+
+  , "data_quality"  INTEGER
+      NOT NULL    DEFAULT 0
+      REFERENCES  DataQuality (dqID)
+      ON DELETE   RESTRICT
+      ON UPDATE   RESTRICT
 );
 
 CREATE INDEX IF NOT EXISTS "Label__Parent"
@@ -206,6 +232,12 @@ CREATE INDEX IF NOT EXISTS "Label__Parent"
 
 
 CREATE TABLE IF NOT EXISTS "Label_URLs" (
+    "labelID"  INTEGER
+      NOT NULL
+      REFERENCES  Labels (labelID)
+      ON DELETE   CASCADE
+  , "url"      TEXT
+      NOT NULL
 );
 
 CREATE INDEX IF NOT EXISTS "URL__Label"
@@ -213,6 +245,13 @@ CREATE INDEX IF NOT EXISTS "URL__Label"
 
 
 CREATE TABLE IF NOT EXISTS "Label_Avatars" (
+    "labelID"  INTEGER
+      NOT NULL
+      REFERENCES  Labels (labelID)
+      ON DELETE   CASCADE
+  , "imageID"  INTEGER
+      NOT NULL
+      REFERENCES  ImageData (imageID)
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS "Label_Avatar__Unique"
