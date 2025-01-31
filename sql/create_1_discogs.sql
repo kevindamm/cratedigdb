@@ -1,3 +1,4 @@
+-- database: /path/to/database.db
 -- SQL statements for creating all tables in the cratedig database
 -- Copyright (c) 2025, Kevin Damm
 -- All rights reserved.
@@ -71,13 +72,28 @@ CREATE TABLE IF NOT EXISTS "ImageData" (
       CHECK (height is NULL OR height > 0)
 );
 
+CREATE TABLE IF NOT EXISTS "Genres" (
+    "genreID"  INTEGER
+      PRIMARY KEY
+  , "genre"    TEXT
+      NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS "Styles" (
+    "styleID"  INTEGER
+      PRIMARY KEY
+  , "style"    TEXT
+      NOT NULL
+);
+
 
 --
 -- ARTISTS AND GROUPS
 --
---   [---------]   N..N   [--------------------]    +index[GroupMember__Group]
+--             *artistID
+--   [---------]          [--------------------]    +index[GroupMember__Group]
 --   | Artists |==========| Artist_GroupMember |---|
---   [---------]          [--------------------]    +index[GroupMember__Member]
+--   [---------]    N..N  [--------------------]    +index[GroupMember__Member]
 --       |                                 +name
 --       |
 --       |-------[Artist_URLs] +index[URL__Artist]
@@ -196,6 +212,7 @@ CREATE UNIQUE INDEX IF NOT EXISTS "Artist_Avatar__Unique"
 --
 -- RECORD LABELS
 --
+--            *labelID
 --   [--------]
 --   | Labels |----- +index[Label__Parent]
 --   [--------]
@@ -257,17 +274,59 @@ CREATE TABLE IF NOT EXISTS "Label_Avatars" (
 CREATE UNIQUE INDEX IF NOT EXISTS "Label_Avatar__Unique"
   ON Label_Avatars (labelID, imageID)
 
+
 --
 -- RELEASES
 --
--- ...
+--              *releaseID
+--   [----------]
+--   | Releases |-----\ *main_version
+--   [----------]     |
+--       |            \---[ ReleaseVersions ]
+--       |             
+--       |
+--       |                    +index[Release__Artist]
+--       |---[Release_Artist] +index[Artist__Release]
+--       |
+--       |----[Release_Video] +index[Video__Release]
+--       |
+--       |----[Release_Genre] +index[Genre__Release]
+--       |
+--       \----[Release_Style] +index[Style__Release]
+--
 
 CREATE TABLE IF NOT EXISTS "Releases" (
- -- TODO
+    "releaseID"     INTEGER
+      PRIMARY KEY
+
+  , "title"         TEXT
+      NOT NULL
+  , "year"          INTEGER
+  , "main_version"  INTEGER
+      NOT NULL    DEFAULT 0
+      -- (defined below, after ReleaseVersions table is created)
+      -- REFERENCES    ReleaseVersions (versionID)
+
+  , "data_quality"  INTEGER
+      NOT NULL    DEFAULT 0
+      REFERENCES  DataQuality (dqID)
+      ON DELETE   RESTRICT
+      ON UPDATE   RESTRICT
 );
 
 CREATE TABLE IF NOT EXISTS "Release_Artists" (
- -- TODO
+    "releaseID"    INTEGER
+      NOT NULL
+      REFERENCES Releases (releaseID)
+  , "artistID"     INTEGER
+      NOT NULL
+      REFERENCES Artists (artistID)
+
+  , "artist_name"  TEXT
+  , "anv"          TEXT
+  
+  , "index"        INTEGER
+  , "role"         TEXT
 );
 
 CREATE INDEX IF NOT EXISTS "Artist__Release"
@@ -277,7 +336,15 @@ CREATE INDEX IF NOT EXISTS "Release__Artist"
 
 
 CREATE TABLE IF NOT EXISTS "Release_Videos" (
- -- TODO
+    "releaseID"    INTEGER
+      NOT NULL
+      REFERENCES  Releases (releaseID)
+  , "url"          TEXT
+      NOT NULL
+
+  , "duration_s"   INTEGER
+  , "title"        TEXT
+  , "description"  TEXT
 );
 
 CREATE INDEX IF NOT EXISTS "Video__Release"
@@ -285,24 +352,45 @@ CREATE INDEX IF NOT EXISTS "Video__Release"
 
 
 CREATE TABLE IF NOT EXISTS "Release_Genres" (
- -- TODO
-);
+    "releaseID"  INTEGER
+      NOT NULL
+      REFERENCES   Releases (releaseID)
+  , "genreID"    INTEGER
+      NOT NULL
+      REFERENCES   Genres (genreID)
+
+  , PRIMARY KEY ("releaseID", "genreID")
+) WITHOUT ROWID;
 
 CREATE INDEX IF NOT EXISTS "Genre__Release"
   ON Release_Genres (releaseID);
 
 
 CREATE TABLE IF NOT EXISTS "Release_Styles" (
- -- TODO
-);
+    "releaseID"  INTEGER
+      NOT NULL
+      REFERENCES   Releases (releaseID)
+  , "styleID"    INTEGER
+      NOT NULL
+      REFERENCES   Styles (styleID)
+
+  , PRIMARY KEY ("releaseID", "styleID")
+) WITHOUT ROWID;
 
 CREATE INDEX IF NOT EXISTS "Style__Release"
   ON Release_Styles (releaseID);
 
 
 CREATE TABLE IF NOT EXISTS "Release_CoverArt" (
- -- TODO
-);
+    "releaseID"  INTEGER
+      NOT NULL
+      REFERENCES   Releases (releaseID)
+  , "imageID"    INTEGER
+      NOT NULL
+      REFERENCES   Images (imageID)
+
+  , PRIMARY KEY ("releaseID", "imageID")
+) WITHOUT ROWID;
 
 CREATE UNIQUE INDEX IF NOT EXISTS "Release_CoverArt__Unique"
   ON Release_CoverArt (releaseID, imageID)
@@ -310,11 +398,55 @@ CREATE UNIQUE INDEX IF NOT EXISTS "Release_CoverArt__Unique"
 --
 -- RELEASE VERSIONS
 --
--- ...
+--                     *versionID
+--   [-----------------]
+--   | ReleaseVersions |-------------\
+--   [-----------------]             |
+--       |       |                   |     *releaseID
+--       |       |               [ Release ]
+--       |       |
+--       |   [ Tracks ]--- +index[ReleaseVersion__TrackNumber]
+--       |       |
+--       |       \--------[ TrackArtists ]
+--       |
+--       |                                +index[ReleaseVersion__Artist]
+--       |-------[ReleaseVersion_Artists] +index[Artist__ReleaseVersion]
+--       |                                +index[ReleaseVersion__Label]
+--       |--------[ReleaseVersion_Labels] +index[Label__ReleaseVersion]
+--       |                                +index[ReleaseVersion__Company]
+--       |-----[ReleaseVersion_Companies] +index[Company__ReleaseVersion]
+--       |
+--       |--------[ReleaseVersion_Genres] +index[Genre__ReleaseVersion]
+--       |--------[ReleaseVersion_Styles] +index[Style__ReleaseVersion]
+--       |-------[ReleaseVersion_Formats] +index[Format__ReleaseVersion]
+--       |---[ReleaseVersion_Identifiers] +index[Identifier__ReleaseVersion]
+--       |--------[ReleaseVersion_Videos] +index[Video__ReleaseVersion]
+--       \------[ReleaseVersion_CoverArt] +index[unique(releaseID, imageID)]
+--
 
 CREATE TABLE IF NOT EXISTS "ReleaseVersions" (
+    "versionID"     INTEGER
+      PRIMARY KEY
+  , "releaseID"     INTEGER
+      NOT NULL
+      REFERENCES  Releases (releaseID)
+      ON DELETE   CASCADE
+
   --TODO
+
+  , "data_quality"  INTEGER
+      NOT NULL    DEFAULT 0
+      REFERENCES  DataQuality (dqID)
+      ON DELETE   RESTRICT
+      ON UPDATE   RESTRICT
 );
+
+-- Add the FK relation for each release's main version.
+ALTER TABLE Releases
+  ADD CONSTRAINT "releases_fk_main_version"
+  FOREIGN KEY (main_version)
+  REFERENCES ReleaseVersions (versionID)
+  ;
 
 CREATE INDEX IF NOT EXISTS "ReleaseVersion__Release"
   ON ReleaseVersions (releaseID);
@@ -370,7 +502,7 @@ CREATE TABLE IF NOT EXISTS "ReleaseVersion_Tracks" (
 
 CREATE INDEX IF NOT EXISTS "Track__ReleaseVersion"
   ON ReleaseVersion_Tracks (versionID);
-CREATE INDEX IF NOT EXISTS "Track__TrackSequence"
+CREATE INDEX IF NOT EXISTS "Track__Tracklist"
   ON ReleaseVersion_Tracks (sequenceID);
 
 
@@ -382,7 +514,7 @@ CREATE INDEX IF NOT EXISTS "TrackArtist__ReleaseVersion"
   ON ReleaseVersion_TrackArtists (versionID);
 CREATE INDEX IF NOT EXISTS "TrackArtist__Track"
   ON ReleaseVersion_TrackArtists (trackID);
-CREATE INDEX IF NOT EXISTS "TrackArtist__TrackSequence"
+CREATE INDEX IF NOT EXISTS "TrackArtist__Tracklist"
   ON ReleaseVersion_TrackArtists (tracklist);
 CREATE INDEX IF NOT EXISTS "TrackArtist__Artist"
   ON ReleaseVersion_TrackArtists (artistID);
