@@ -27,6 +27,21 @@
 -- 
 -- Database TABLE and INDEX definitions for reflecting the CC0 data of Discogs.
 --
+--   [---------]
+--   | Artists ]
+--   [---------]                            [--------]
+--        |                                 | Labels |
+--        |     N..N  [----------]          [--------]
+--        \-----------| Releases |               | 1..1
+--                    [----------]               |
+--                         |                     |
+--                         |      1..N  [-----------------]
+--                         \------------| ReleaseVersions |
+--                                      [-----------------]
+--                                                     |
+--                                                     \------[ Tracks ]
+--
+--
 -- These tables are in SQLite3 syntax/semantics, that is the flavor imposed by
 -- Cloudflare D1 (as RDBMS for Workers) and easily interfaced with using golang.
 -- 
@@ -272,7 +287,7 @@ CREATE TABLE IF NOT EXISTS "Label_Avatars" (
 );
 
 CREATE UNIQUE INDEX IF NOT EXISTS "Label_Avatar__Unique"
-  ON Label_Avatars (labelID, imageID)
+  ON Label_Avatars (labelID, imageID);
 
 
 --
@@ -393,7 +408,7 @@ CREATE TABLE IF NOT EXISTS "Release_CoverArt" (
 ) WITHOUT ROWID;
 
 CREATE UNIQUE INDEX IF NOT EXISTS "Release_CoverArt__Unique"
-  ON Release_CoverArt (releaseID, imageID)
+  ON Release_CoverArt (releaseID, imageID);
 
 --
 -- RELEASE VERSIONS
