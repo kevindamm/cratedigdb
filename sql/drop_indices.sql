@@ -29,11 +29,12 @@
 -- TODO (drop ledger indices)
 
 -- collection
-DROP INDEX IF EXISTS "Vinyl";
-DROP INDEX IF EXISTS "VinylVersions";
-DROP INDEX IF EXISTS "PublicCrates";
-DROP INDEX IF EXISTS "UserCrates";
-DROP INDEX IF EXISTS "Usernames";
+DROP INDEX IF EXISTS "VinylOwned__Version";
+DROP INDEX IF EXISTS "VinylOwned__Release";
+DROP INDEX IF EXISTS "VinylOwned__User";
+DROP INDEX IF EXISTS "UserCrates__Public";
+DROP INDEX IF EXISTS "UserCrates__All";
+DROP INDEX IF EXISTS "Users__Active";
 
 -- artists and groups
 DROP INDEX IF EXISTS "GroupMember__Group";

@@ -60,28 +60,29 @@ CREATE TABLE IF NOT EXISTS "UserProfiles" (
       NOT NULL  DEFAULT ""
   , "discogsID"   TEXT
   , "avatarURL"   TEXT
+
   , "date_banned" TEXT  -- YYYY-MM-DD
       -- A NULL date_banned value implies the user is not banned.
 );
 
 -- Lookup of user ID by their username.
-CREATE UNIQUE INDEX IF NOT EXISTS "Usernames"
-  ON UserProfiles
-    ("userID", "username")
-  WHERE (date_banned is NULL);
+CREATE UNIQUE INDEX IF NOT EXISTS "Users__Active"
+  ON UserProfiles ("userID")
+  WHERE (date_banned is NULL)
+  ;
 
 --
 -- GRADING
 --
 
 -- An enum table referenced by VinylItems columns mediaGrade and sleeveGrade.
+-- see create_4_basedats.sql for the grading definitions.
 CREATE TABLE IF NOT EXISTS "Grading" (
     "gradeID" INTEGER PRIMARY KEY
   , "grade"   TEXT NOT NULL
   , "name"    TEXT NOT NULL
   , "quality" INTEGER NOT NULL
 );
--- see create_basedats.sql for the grading definitions.
 
 --
 -- COLLECTIONS
@@ -140,19 +141,19 @@ CREATE TABLE IF NOT EXISTS "Crates" (
       ON CONFLICT ROLLBACK
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS "UserCrates"
+CREATE UNIQUE INDEX IF NOT EXISTS "UserCrates_All"
   ON Crates
     (userID, crateID);
 
-CREATE UNIQUE INDEX IF NOT EXISTS "PublicCrates"
+CREATE UNIQUE INDEX IF NOT EXISTS "UserCrates__Public"
   ON Crates
     (userID, crateID)
   WHERE (visible <> 0);
 
--- PRIMARY KEY is a composite of columns (user, release, version, instance);
--- we intend to track each individual copy's state of quality, and possession,
--- and a copy is defined by the user and the specific version of a release.
+-- Represents a single copy of a release version and its related metadata.  We
+-- track each copy individually for their own grading and purchase/sale history.
 CREATE TABLE IF NOT EXISTS "VinylItems" (
+  -- PRIMARY KEY is a composite of columns (user, release, version, item)
     "userID"        INTEGER
       NOT NULL
       REFERENCES  UserProfiles (userID)
@@ -165,14 +166,14 @@ CREATE TABLE IF NOT EXISTS "VinylItems" (
       NOT NULL
       REFERENCES  ReleaseVersions (versionID)
       ON DELETE   CASCADE
-  , "instance"      INTEGER
+  , "item"      INTEGER
       NOT NULL    DEFAULT 1
-      CHECK       (instance > 0)
+      CHECK       (item > 0)
 
   -- Exclusively exists in only one crate at a time, or (NULL) not in any crate.
   , "crateID"       INTEGER
       CHECK       (crateID > 0)  -- zero is reserved for the special 'ALL' crate
-                                 -- NULL implies unsorted, only listed with ALL.
+      DEFAULT     NULL           -- NULL implies unsorted, only listed with ALL.
       REFERENCES  Crates (crateID)
       ON DELETE   SET NULL  -- keep the vinyl (in ALL) if its folder is deleted
 
@@ -192,22 +193,29 @@ CREATE TABLE IF NOT EXISTS "VinylItems" (
   , "notes"         TEXT
       NOT NULL    DEFAULT ""
 
-  , PRIMARY KEY ("userID", "releaseID", "versionID", "instance")
+  , PRIMARY KEY ("userID", "releaseID", "versionID", "item")
 ) WITHOUT ROWID;
 
-CREATE INDEX IF NOT EXISTS "Vinyl"
-  ON VinylItems
-    (userID, releaseID)
-  WHERE (date_sold IS NULL
-    AND date_traded IS NULL)
-  ;
+CREATE INDEX IF NOT EXISTS "VinylOwned__User"
+  ON VinylItems (userID)
+  WHERE (
+          date_sold IS NULL
+    AND date_traded IS NULL
+  );
 
-CREATE INDEX IF NOT EXISTS "VinylVersions"
-  ON VinylItems
-    (userID, releaseID, versionID)
-  WHERE (date_sold IS NULL
-    AND date_traded IS NULL)
-  ;
+CREATE INDEX IF NOT EXISTS "VinylOwned__Release"
+  ON VinylItems (userID, releaseID)
+  WHERE (
+          date_sold IS NULL
+    AND date_traded IS NULL
+  );
+
+CREATE INDEX IF NOT EXISTS "VinylOwned__Version"
+  ON VinylItems (userID, versionID)
+  WHERE (
+          date_sold IS NULL
+    AND date_traded IS NULL
+  );
 
 --
 -- TAGGING
@@ -239,17 +247,14 @@ CREATE TABLE IF NOT EXISTS "TagNames" (
 CREATE TABLE IF NOT EXISTS "VinylTagging" (
     "userID"     INTEGER
       NOT NULL
-  , "releaseID"  INTEGER
+      REFERENCES   UserProfiles (userID)
+  , "versionID"  INTEGER
       NOT NULL
-
+      REFERENCES   ReleaseVersions (versionID)
   , "tagID"      INTEGER
       NOT NULL
       REFERENCES   TagNames (tagID)
       ON DELETE    CASCADE
 
-  , FOREIGN KEY ("userID", "releaseID")
-      REFERENCES   Vinyl (userID, releaseID)
-
-  , UNIQUE ("userID", "releaseID", "tagID")
-      ON CONFLICT IGNORE
-);
+  , PRIMARY KEY ("userID", "releaseID", "tagID")
+) WITHOUT ROWID;
