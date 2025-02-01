@@ -37,36 +37,36 @@ DROP TABLE IF EXISTS "Grading";
 DROP TABLE IF EXISTS "UserProfiles";
 
 -- drop discogs tables
-DROP TABLE IF EXISTS "ReleaseVersion_Artists";
-DROP TABLE IF EXISTS "ReleaseVersion_Labels";
-DROP TABLE IF EXISTS "ReleaseVersion_Genres";
-DROP TABLE IF EXISTS "ReleaseVersion_Styles";
-DROP TABLE IF EXISTS "ReleaseVersion_Formats";
-DROP TABLE IF EXISTS "ReleaseVersion_Tracks";
-DROP TABLE IF EXISTS "ReleaseVersion_TrackArtists";
-DROP TABLE IF EXISTS "ReleaseVersion_Identifiers";
-DROP TABLE IF EXISTS "ReleaseVersion_Videos";
-DROP TABLE IF EXISTS "ReleaseVersion_Companies";
+DROP TABLE IF EXISTS "Track_Styles";
+DROP TABLE IF EXISTS "Track_Artists";
+DROP TABLE IF EXISTS "Tracks";
+
 DROP TABLE IF EXISTS "ReleaseVersion_CoverArt";
+DROP TABLE IF EXISTS "ReleaseVersion_Formats";
+DROP TABLE IF EXISTS "ReleaseVersion_Genres";
+DROP TABLE IF EXISTS "ReleaseVersion_Labels";
+DROP TABLE IF EXISTS "ReleaseVersion_Artists";
 DROP TABLE IF EXISTS "ReleaseVersions";
 
-DROP TABLE IF EXISTS "Release_Artists";
-DROP TABLE IF EXISTS "Release_Videos";
-DROP TABLE IF EXISTS "Release_Genres";
 DROP TABLE IF EXISTS "Release_Styles";
-DROP TABLE IF EXISTS "Release_CoverArt";
+DROP TABLE IF EXISTS "Release_Genres";
+DROP TABLE IF EXISTS "Release_Videos";
+DROP TABLE IF EXISTS "Release_Artists";
 DROP TABLE IF EXISTS "Releases";
 
-DROP TABLE IF EXISTS "Label_URLs";
 DROP TABLE IF EXISTS "Label_Avatars";
+DROP TABLE IF EXISTS "Label_URLs";
 DROP TABLE IF EXISTS "Labels";
 
-DROP TABLE IF EXISTS "Artist_URLs";
 DROP TABLE IF EXISTS "Artist_Avatars";
-DROP TABLE IF EXISTS "Artist_Names";
 DROP TABLE IF EXISTS "Artist_Alias";
+DROP TABLE IF EXISTS "Artist_Names";
+DROP TABLE IF EXISTS "Artist_URLs";
 DROP TABLE IF EXISTS "Artist_GroupMembers";
 DROP TABLE IF EXISTS "Artists";
 
 DROP TABLE IF EXISTS "ImageData";
+DROP TABLE IF EXISTS "Styles";
+DROP TABLE IF EXISTS "Genres";
+DROP TABLE IF EXISTS "MediaFormats";
 DROP TABLE IF EXISTS "DataQuality";

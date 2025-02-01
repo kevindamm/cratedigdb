@@ -28,49 +28,55 @@
 
 -- TODO (drop ledger indices)
 
--- drop collection indices
+-- collection
 DROP INDEX IF EXISTS "Vinyl";
 DROP INDEX IF EXISTS "VinylVersions";
 DROP INDEX IF EXISTS "PublicCrates";
 DROP INDEX IF EXISTS "UserCrates";
 DROP INDEX IF EXISTS "Usernames";
 
--- drop discogs indices
+-- artists and groups
+DROP INDEX IF EXISTS "GroupMember__Group";
+DROP INDEX IF EXISTS "GroupMember__Member";
 DROP INDEX IF EXISTS "URL__Artist";
 DROP INDEX IF EXISTS "Name__Artist";
 DROP INDEX IF EXISTS "Alias__Artist";
-DROP INDEX IF EXISTS "GroupMembers__Unique";
-DROP INDEX IF EXISTS "GroupMember__Group";
-DROP INDEX IF EXISTS "GroupMember__Member";
+DROP INDEX IF EXISTS "Avatar__Artist";
+DROP INDEX IF EXISTS "Avatar__Image";
 
+-- record labels
 DROP INDEX IF EXISTS "URL__Label";
 DROP INDEX IF EXISTS "Label__Parent";
 
+-- releases
 DROP INDEX IF EXISTS "Artist__Release";
 DROP INDEX IF EXISTS "Release__Artist";
 DROP INDEX IF EXISTS "Video__Release";
 DROP INDEX IF EXISTS "Genre__Release";
+DROP INDEX IF EXISTS "Release__Genre";
 DROP INDEX IF EXISTS "Style__Release";
+DROP INDEX IF EXISTS "Release__Style";
 
+-- release versions
+DROP INDEX IF EXISTS "ReleaseVersion__Release";
 DROP INDEX IF EXISTS "Artist__ReleaseVersion";
 DROP INDEX IF EXISTS "ReleaseVersion__Artist";
 DROP INDEX IF EXISTS "Label__ReleaseVersion";
 DROP INDEX IF EXISTS "ReleaseVersion__Label";
 DROP INDEX IF EXISTS "Genre__ReleaseVersion";
-DROP INDEX IF EXISTS "Style__ReleaseVersion";
 DROP INDEX IF EXISTS "Format__ReleaseVersion";
-DROP INDEX IF EXISTS "Track__ReleaseVersion";
-DROP INDEX IF EXISTS "Track__TrackSequence";
-DROP INDEX IF EXISTS "TrackArtist__ReleaseVersion";
-DROP INDEX IF EXISTS "TrackArtist__Track";
-DROP INDEX IF EXISTS "TrackArtist__TrackSequence";
-DROP INDEX IF EXISTS "TrackArtist__Artist";
-DROP INDEX IF EXISTS "Identifier__ReleaseVersion";
-DROP INDEX IF EXISTS "Video__ReleaseVersion";
-DROP INDEX IF EXISTS "Company__ReleaseVersion";
-DROP INDEX IF EXISTS "ReleaseVersion__Company";
 
-DROP INDEX IF EXISTS "Artist_Avatar__Unique";
-DROP INDEX IF EXISTS "Label_Avatar__Unique";
-DROP INDEX IF EXISTS "Release_CoverArt__Unique";
-DROP INDEX IF EXISTS "ReleaseVersion_CoverArt__Unique";
+-- cover art
+DROP INDEX IF EXISTS "CoverArt__Version";
+DROP INDEX IF EXISTS "CoverArt__FrontSleeve";
+DROP INDEX IF EXISTS "CoverArt__BackSleeve";
+DROP INDEX IF EXISTS "CoverArt__MediaA";
+DROP INDEX IF EXISTS "CoverArt__MediaB";
+
+-- tracks
+DROP INDEX IF EXISTS "Track__Unique";
+DROP INDEX IF EXISTS "Track__Tracklist";
+DROP INDEX IF EXISTS "Artist__Track";
+DROP INDEX IF EXISTS "Track__Artist";
+DROP INDEX IF EXISTS "Style__Track";
+DROP INDEX IF EXISTS "Track__Style";
