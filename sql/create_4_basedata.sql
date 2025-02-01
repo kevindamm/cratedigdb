@@ -28,11 +28,6 @@
 --
 -- ASSUMES TABLES HAVE BEEN CREATED; run other create_*.sql scrpts beforehand.
 
--- The unknown user.
-INSERT INTO UserProfiles
-    ("userID", "username", "fullname", "date_banned")
-  VALUES (  0,      "--?",  "UNKNOWN",  "2025-01-23")
-       ;
 
 -- These values based, in part, on the Goldmine Grading Guide at discogs:
 -- https://www.discogs.com/selling/resources/how-to-grade-items/
@@ -51,13 +46,7 @@ INSERT INTO Grading
        , (8,         "P",     "Poor",            5)
        ;
 
--- The folder with crateID=0 is the catch-all which everyone implicitly has,
--- but the vinyl table constraint keeps any item from being explicitly in it.
--- Having it reified here can make client state & some queries a little simpler.
-INSERT INTO Crates
-    ("crateID", "userID", "name", "slug", "visible")
-  VALUES (   0,        0,  "ALL",  "all",      TRUE)
-       ;
+-- TODO Formats
 
 -- These values are based on the Voting Guidelines for data quality
 -- https://www.discogs.com/help/voting-guidelines.html
@@ -77,3 +66,41 @@ INSERT INTO DataQuality
 	     , (6, "Disagreement",            "Recent conflicting votes about the data quality (Incorrect and Correct), needs consensus.  Does not include requests for edits that arise from changes in the world.")
 	     , (7, "Complete And Correct",    "For release, artist or label data that is exemplary.")
        ;
+
+
+-- "UNKNOWN" representations
+
+INSERT INTO UserProfiles
+    ("userID", "username",     "fullname", "date_banned")
+  VALUES (  0,  "unknown", "UNKNOWN USER",  "2025-01-23");
+
+INSERT INTO Artists
+    ("artistID",    "name", "data_quality")
+  VALUES (    0, "unknown",              5);
+
+INSERT INTO Artist_GroupMembers
+    ("group_artistID", "member_artistID", "member_name")
+  VALUES (          0,                 0,     "unknown");
+
+INSERT INTO Labels
+    ("labelID",    "name", "parentID", "data_quality")
+  VALUES (   0, "unknown",          0,              5);
+
+INSERT INTO Releases
+    ("releaseID",   "title", "data_quality")
+  VALUES (     0, "unknown",              5);
+
+INSERT INTO ReleaseVersions
+    ("versionID", "releaseID", "title", "data_quality")
+  VALUES (     0,           0, "unknown",            5);
+
+INSERT INTO ImageData
+    ("imageID", "obj_path")
+  VALUES (   0,  "unknown");
+
+-- The folder with crateID=0 is the catch-all which everyone implicitly has,
+-- but the vinyl table constraint keeps any item from being explicitly in it.
+-- Having it reified here can make client state & some queries a little simpler.
+INSERT INTO Crates
+    ("crateID", "userID", "name", "slug", "visible")
+  VALUES (   0,        0,  "ALL",  "all",      TRUE);
