@@ -21,11 +21,23 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --
--- github:kevindamm/cratedigdb/sql/create_ledger.sql
+-- github:kevindamm/cratedigdb/sql/create_3_ledger.sql
 
 -- 
 -- Database TABLE and INDEX definitions for representing sale amounts and dates
 -- (intended as a convenience for operational organization and tax accounting).
+--
+--   [----------]   N..1
+--   | Listings |--------index[Inventory__User]
+--   [----------]
+--       |
+--       |                   *orderID
+--       | N..N     [--------]        (enum)
+--       '----------| Orders |--------[OrderState] 1..N
+--                  [--------]                   *-----*[OrderHistory]
+--                   +buyer, seller FK(userID)           |
+--                                                       +index[History__Order]
+--
 --
 -- These tables are in SQLite3 syntax/semantics, that is the flavor imposed by
 -- Cloudflare D1 (as RDBMS for Workers) and easily interfaced with using golang.
@@ -35,3 +47,42 @@
 -- In tables where the rowid is used as the parent column of a FOREIGN KEY
 -- relationship, a named column is created which acts as an alias for it.
 --
+
+CREATE TABLE IF NOT EXISTS "Listings" (
+    "listingID"  INTEGER
+      PRIMARY KEY
+
+  , "userID"        INTEGER
+      NOT NULL        CHECK (userID <> 0)
+      REFERENCES      UserProfiles (userID)
+      ON DELETE       RESTRICT
+      ON UPDATE       RESTRICT
+  , "versionID"     INTEGER
+      NOT NULL        CHECK (versionID <> 0)
+      REFERENCES      ReleaseVersions (userID)
+      ON DELETE       RESTRICT
+      ON UPDATE       RESTRICT
+  , "item"          INTEGER
+      NOT NULL        DEFAULT 1
+
+  , "price_low"     INTEGER
+  , "price_high"    INTEGER
+  , "price_curr"    TEXT  -- currency abbreviation
+
+  , "allow_offers"  BOOLEAN
+      NOT NULL        DEFAULT FALSE
+  , "date_posted"   TEXT  -- YYYY/MM/DD
+      NOT NULL        DEFAULT CURRENT_DATE
+  , "date_closed"   TEXT  -- YYYY/MM/DD
+
+  , FOREIGN KEY           ("userID", "versionID", "item")
+    REFERENCES VinylItems ("userID", "versionID", "item")
+);
+
+CREATE INDEX IF NOT EXISTS "Inventory__User"
+  ON Listings (userID);
+
+-- TODO ListingComments
+
+-- TODO Orders
+-- TODO OrderItems

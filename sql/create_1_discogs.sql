@@ -293,6 +293,7 @@ CREATE TABLE IF NOT EXISTS "Labels" (
 
   , "parentID"      INTEGER
       REFERENCES      Labels (labelID)
+      DEFERRABLE      INITIALLY DEFERRED
       ON DELETE       CASCADE
       ON UPDATE       RESTRICT
   , "parent_name"   TEXT
@@ -510,6 +511,7 @@ ALTER TABLE Releases
   ADD CONSTRAINT "releases_fk_main_version"
   FOREIGN KEY (main_version)
   REFERENCES ReleaseVersions (versionID)
+  DEFERRABLE  INITIALLY DEFERRED
   ;
 
 CREATE INDEX IF NOT EXISTS "ReleaseVersion__Release"

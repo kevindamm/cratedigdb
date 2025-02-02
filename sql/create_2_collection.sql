@@ -193,7 +193,7 @@ CREATE TABLE IF NOT EXISTS "VinylItems" (
   , "notes"         TEXT
       NOT NULL    DEFAULT ""
 
-  , PRIMARY KEY ("userID", "releaseID", "versionID", "item")
+  , PRIMARY KEY ("userID", "versionID", "item")
 ) WITHOUT ROWID;
 
 CREATE INDEX IF NOT EXISTS "VinylOwned__User"
