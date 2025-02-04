@@ -30,7 +30,7 @@
 const ACCEPT_V2 = "application/vnd.discogs.v2.html+json"
 
 // The UserAgent we identify ourselves as.  Follows sec 3.7 of RFC 1945.
-const USER_AGENT = "CrateDig/0.2 +https://cratedig.kevindamm.com"
+const USER_AGENT = "CrateDigDB/0.3 +https://github.com/kevindamm/cratedigdb"
 
 
 // Compatible representation for external JSON typing without the name method,

@@ -33,13 +33,6 @@ import (
 	"path"
 )
 
-type Track struct {
-	ID       int
-	Position string `xml:"position"`
-	Title    string `xml:"title"`
-	Duration string `xml:"duration"`
-}
-
 func data_path(folder, datestr, category string) string {
 	return path.Join(folder,
 		fmt.Sprintf("discogs_%s_%s.xml.gz", datestr, category))
