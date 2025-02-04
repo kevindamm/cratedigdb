@@ -27,6 +27,10 @@
 -- Drop these after dropping the indices.
 
 -- TODO (drop ledger tables)
+DROP TABLE IF EXISTS "Listings";
+DROP TABLE IF EXISTS "Orders";
+DROP TABLE IF EXISTS "OrderItems";
+DROP TABLE IF EXISTS "OrderUpdates";
 
 -- drop collection tables
 DROP TABLE IF EXISTS "VinylTagging";

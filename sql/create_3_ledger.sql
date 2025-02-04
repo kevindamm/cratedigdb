@@ -49,9 +49,6 @@
 --
 
 CREATE TABLE IF NOT EXISTS "Listings" (
-    "listingID"  INTEGER
-      PRIMARY KEY
-
   , "userID"        INTEGER
       NOT NULL        CHECK (userID <> 0)
       REFERENCES      UserProfiles (userID)
@@ -77,12 +74,80 @@ CREATE TABLE IF NOT EXISTS "Listings" (
 
   , FOREIGN KEY           ("userID", "versionID", "item")
     REFERENCES VinylItems ("userID", "versionID", "item")
+
+  , PRIMARY KEY ("userID", "versionID", "item")
 );
 
-CREATE INDEX IF NOT EXISTS "Inventory__User"
-  ON Listings (userID);
+CREATE INDEX IF NOT EXISTS "Listing__User"
+  ON Listings (userID)
+  ;
 
--- TODO ListingComments
 
--- TODO Orders
--- TODO OrderItems
+CREATE TABLE IF NOT EXISTS "Orders" (
+    "orderID"        INTEGER
+      PRIMARY KEY
+
+  , "seller_userID"  INTEGER
+      -- Only orders for known sellers are tracked.
+      NOT NULL         -- usually it's the person running this service.
+      REFERENCES       UserProfiles (userID)
+      ON DELETE        CASCADE
+  , "buyer_userID"   INTEGER
+      NOT NULL         DEFAULT 0
+      REFERENCES       UserProfiles (userID)
+      ON DELETE        SET NULL
+
+  , "date_opened"    TEXT  -- YYYY/MM/DD
+      DEFAULT CURRENT_DATE
+  , "date_closed"    TEXT  -- YYYY/MM/DD
+      DEFAULT NULL
+
+  , "state"          TEXT
+);
+
+CREATE TABLE IF NOT EXISTS "OrderItems" (
+    "itemID"        INTEGER
+      PRIMARY KEY
+  , "orderID"       INTEGER
+      REFERENCES      Orders (orderID)
+      ON DELETE       CASCADE
+
+  , "sellerID"      INTEGER
+      NOT NULL        CHECK (userID <> 0)
+      REFERENCES      UserProfiles (userID)
+      ON DELETE       RESTRICT
+      ON UPDATE       RESTRICT
+  , "versionID"     INTEGER
+      NOT NULL        CHECK (versionID <> 0)
+      REFERENCES      ReleaseVersions (userID)
+      ON DELETE       RESTRICT
+      ON UPDATE       RESTRICT
+  , "item"          INTEGER
+      NOT NULL        DEFAULT 1
+
+  , FOREIGN KEY           ("sellerID", "versionID", "item")
+    REFERENCES VinylItems ("userID",   "versionID", "item")
+)
+
+CREATE INDEX IF NOT EXISTS "Item__Order"
+  ON OrderItems (orderID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Item__Seller"
+  ON OrderItems (sellerID)
+  ;
+
+
+CREATE TABLE IF NOT EXISTS "OrderUpdates" (
+    "updateID"  INTEGER
+      PRIMARY KEY
+  , "orderID"   INTEGER
+      REFERENCES  Orders (orderID)
+
+  , "update_time"  TEXT  -- YYYY/MM/DD HH:MM:SS
+      DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE INDEX IF NOT EXISTS "Update__Order"
+  ON OrderUpdates (orderID)
+  ;

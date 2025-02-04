@@ -26,7 +26,12 @@
 -- DROP (if exists) all INDEX definitions.
 -- Drop these before dropping the tables.
 
--- TODO (drop ledger indices)
+-- ledger
+DROP INDEX IF EXISTS "Listing__User";
+DROP INDEX IF EXISTS "Listing__Version";
+DROP INDEX IF EXISTS "Item__Order";
+DROP INDEX IF EXISTS "Item__Seller";
+DROP INDEX IF EXISTS "Update__Order";
 
 -- collection
 DROP INDEX IF EXISTS "VinylOwned__Version";
@@ -34,7 +39,7 @@ DROP INDEX IF EXISTS "VinylOwned__Release";
 DROP INDEX IF EXISTS "VinylOwned__User";
 DROP INDEX IF EXISTS "UserCrates__Public";
 DROP INDEX IF EXISTS "UserCrates__All";
-DROP INDEX IF EXISTS "Users__Active";
+DROP INDEX IF EXISTS "User__Active";
 
 -- artists and groups
 DROP INDEX IF EXISTS "GroupMember__Group";
