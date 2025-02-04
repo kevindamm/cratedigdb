@@ -1,4 +1,4 @@
-module github.com/kevindamm/cratedig
+module github.com/kevindamm/cratedigdb
 
 go 1.23.0
 
