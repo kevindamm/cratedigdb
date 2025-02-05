@@ -20,7 +20,7 @@
 //
 // github:kevindamm/cratedig/records.go
 
-package cratedig
+package schema
 
 type Record struct {
 	DiscogsID string `json:"id"`

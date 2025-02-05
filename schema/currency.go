@@ -20,7 +20,7 @@
 //
 // github:kevindamm/cratedig/currency.go
 
-package cratedig
+package schema
 
 type CurrencyEnum string
 

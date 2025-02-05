@@ -20,7 +20,9 @@
 //
 // github:kevindamm/cratedig/releases.go
 
-package cratedig
+package schema
+
+import "encoding/xml"
 
 type ReleaseParams struct {
 	ReleaseID int          `param:"releaseID"`
@@ -40,4 +42,31 @@ type Release struct {
 type ReleaseStats struct {
 	CountHave uint `json:"num_have"`
 	CountWant uint `json:"num_want"`
+}
+
+type XmlLabel struct {
+	Name  string `xml:"name,attr"`
+	Catno string `xml:"catno,attr"`
+	ID    int    `xml:"id,attr"`
+}
+
+type XmlRelease struct {
+	ID       int        `xml:"id,attr"`
+	XMLName  xml.Name   `xml:"release"`
+	Style    []string   `xml:"styles>style"`
+	Genre    []string   `xml:"genres>genre"`
+	Label    XmlLabel   `xml:"labels>label"`
+	Track    []XmlTrack `xml:"tracklist>track"`
+	RelTitle string     `xml:"title"`
+	MasterID int        `xml:"master_id"`
+	Country  string     `xml:"country"`
+	Released string     `xml:"released"`
+	Artist   string     `xml:"artists>artist>name"`
+}
+
+type XmlTrack struct {
+	ID       int
+	Position string `xml:"position"`
+	Title    string `xml:"title"`
+	Duration string `xml:"duration"`
 }

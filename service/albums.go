@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/kevindamm/cratedig"
+	"github.com/kevindamm/cratedigdb/schema"
 	"github.com/labstack/echo"
 )
 
@@ -41,7 +41,7 @@ func (server *server) getAlbum(ctx echo.Context) error {
 }
 
 func (server *server) addAlbum(ctx echo.Context) error {
-	album := new(cratedig.Album)
+	album := new(schema.Album)
 	if err := ctx.Bind(album); err != nil {
 		return err
 	}

@@ -20,7 +20,7 @@
 //
 // github:kevindamm/cratedig/artists.go
 
-package cratedig
+package schema
 
 // Artists may be individuals or groups of artists,
 // identified by their discogs ID and MusicBrainz ID;

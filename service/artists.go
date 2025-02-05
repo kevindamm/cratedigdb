@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/artists.go
+// github:kevindamm/cratedigdb/service/artists.go
 
 package service
 
@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/kevindamm/cratedig"
+	"github.com/kevindamm/cratedigdb/schema"
 	"github.com/labstack/echo"
 )
 
@@ -41,7 +41,7 @@ func (server *server) getArtist(ctx echo.Context) error {
 }
 
 func (server *server) addArtist(ctx echo.Context) error {
-	artist := new(cratedig.Artist)
+	artist := new(schema.Artist)
 	if err := ctx.Bind(artist); err != nil {
 		return err
 	}

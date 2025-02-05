@@ -26,7 +26,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/kevindamm/cratedig"
+	"github.com/kevindamm/cratedigdb/schema"
 	"github.com/labstack/echo"
 )
 
@@ -44,7 +44,7 @@ func (server *server) getRecord(ctx echo.Context) error {
 }
 
 func (server *server) addRecord(ctx echo.Context) error {
-	record := new(cratedig.Record)
+	record := new(schema.Record)
 	if err := ctx.Bind(record); err != nil {
 		return err
 	}
