@@ -29,7 +29,8 @@
 -- TODO (drop ledger tables)
 DROP TABLE IF EXISTS "Listings";
 DROP TABLE IF EXISTS "Orders";
-DROP TABLE IF EXISTS "OrderItems";
+DROP TABLE IF EXISTS "OrderPurchases";
+DROP TABLE IF EXISTS "OrderTrades";
 DROP TABLE IF EXISTS "OrderUpdates";
 
 -- drop collection tables

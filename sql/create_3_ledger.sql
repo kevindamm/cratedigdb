@@ -49,28 +49,29 @@
 --
 
 CREATE TABLE IF NOT EXISTS "Listings" (
-  , "userID"        INTEGER
-      NOT NULL        CHECK (userID <> 0)
-      REFERENCES      UserProfiles (userID)
-      ON DELETE       RESTRICT
-      ON UPDATE       RESTRICT
-  , "versionID"     INTEGER
-      NOT NULL        CHECK (versionID <> 0)
-      REFERENCES      ReleaseVersions (userID)
-      ON DELETE       RESTRICT
-      ON UPDATE       RESTRICT
-  , "item"          INTEGER
-      NOT NULL        DEFAULT 1
+  , "userID"          INTEGER
+      NOT NULL          CHECK (userID <> 0)
+      REFERENCES        UserProfiles (userID)
+      ON DELETE         RESTRICT
+      ON UPDATE         RESTRICT
+  , "versionID"       INTEGER
+      NOT NULL          CHECK (versionID <> 0)
+      REFERENCES        ReleaseVersions (userID)
+      ON DELETE         RESTRICT
+      ON UPDATE         RESTRICT
+  , "item"            INTEGER
+      NOT NULL          DEFAULT 1
+  
+  , "price_low"       INTEGER
+  , "price_high"      INTEGER
+  , "price_currency"  TEXT  -- discogs currency abbreviation
 
-  , "price_low"     INTEGER
-  , "price_high"    INTEGER
-  , "price_curr"    TEXT  -- currency abbreviation
-
-  , "allow_offers"  BOOLEAN
-      NOT NULL        DEFAULT FALSE
-  , "date_posted"   TEXT  -- YYYY/MM/DD
-      NOT NULL        DEFAULT CURRENT_DATE
-  , "date_closed"   TEXT  -- YYYY/MM/DD
+  , "allow_offers"    BOOLEAN
+      NOT NULL          DEFAULT FALSE
+  , "date_opened"     TEXT  -- YYYY/MM/DD
+      NOT NULL          DEFAULT CURRENT_DATE
+  , "date_closed"     TEXT  -- YYYY/MM/DD
+      -- if NULL, this listing is still available
 
   , FOREIGN KEY           ("userID", "versionID", "item")
     REFERENCES VinylItems ("userID", "versionID", "item")
@@ -80,6 +81,15 @@ CREATE TABLE IF NOT EXISTS "Listings" (
 
 CREATE INDEX IF NOT EXISTS "Listing__User"
   ON Listings (userID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Listing__Version"
+  ON Listings (versionID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Listing__Opened"
+  ON Listings (date_opened)
+  WHERE (date_closed IS NULL)
   ;
 
 
@@ -97,57 +107,141 @@ CREATE TABLE IF NOT EXISTS "Orders" (
       REFERENCES       UserProfiles (userID)
       ON DELETE        SET NULL
 
+  -- This is the total price minus the trade value and reflects the most recent
+  -- value.  It must be positive; otherwise buyer and seller are swapped.
+  , "offer_price"     REAL
+      NOT NULL          CHECK (price >= 0.0)
+  , "price_currency"  TEXT     -- using discogs abbreviations
+      -- if NULL, assumes USD currency.
+
   , "date_opened"    TEXT  -- YYYY/MM/DD
       DEFAULT CURRENT_DATE
   , "date_closed"    TEXT  -- YYYY/MM/DD
       DEFAULT NULL
+  , "last_activity"  TEXT  -- YYYY/MM/DD HH:MM:SS.SSS
+      DEFAULT CURRENT_TIMESTAMP
 
   , "state"          TEXT
 );
 
-CREATE TABLE IF NOT EXISTS "OrderItems" (
-    "itemID"        INTEGER
-      PRIMARY KEY
-  , "orderID"       INTEGER
-      REFERENCES      Orders (orderID)
-      ON DELETE       CASCADE
-
-  , "sellerID"      INTEGER
-      NOT NULL        CHECK (userID <> 0)
-      REFERENCES      UserProfiles (userID)
-      ON DELETE       RESTRICT
-      ON UPDATE       RESTRICT
-  , "versionID"     INTEGER
-      NOT NULL        CHECK (versionID <> 0)
-      REFERENCES      ReleaseVersions (userID)
-      ON DELETE       RESTRICT
-      ON UPDATE       RESTRICT
-  , "item"          INTEGER
-      NOT NULL        DEFAULT 1
-
-  , FOREIGN KEY           ("sellerID", "versionID", "item")
-    REFERENCES VinylItems ("userID",   "versionID", "item")
-)
-
-CREATE INDEX IF NOT EXISTS "Item__Order"
-  ON OrderItems (orderID)
+CREATE INDEX IF NOT EXISTS "Order__Seller"
+  ON Orders (seller_userID)
   ;
 
-CREATE INDEX IF NOT EXISTS "Item__Seller"
-  ON OrderItems (sellerID)
+CREATE INDEX IF NOT EXISTS "Order__Buyer"
+  ON Orders (buyer_userID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Order__Opened"
+  ON Orders (date_opened)
+  WHERE (date_closed IS NULL)
+  ;
+
+
+CREATE TABLE IF NOT EXISTS "OrderPurchases" (
+    "purchaseID"   INTEGER
+      PRIMARY KEY
+  , "orderID"      INTEGER
+      REFERENCES     Orders (orderID)
+      ON DELETE      CASCADE
+
+  , "sellerID"     INTEGER
+      NOT NULL       CHECK (userID <> 0)
+      REFERENCES     UserProfiles (userID)
+      ON DELETE      RESTRICT
+      ON UPDATE      RESTRICT
+  , "versionID"    INTEGER
+      NOT NULL       CHECK (versionID <> 0)
+      REFERENCES     ReleaseVersions (userID)
+      ON DELETE      RESTRICT
+      ON UPDATE      RESTRICT
+  , "item"         INTEGER
+      NOT NULL       DEFAULT 1
+
+  -- This is the price on the listing and may be adjusted before closing the
+  -- order.  It must be positive; otherwise buyer and seller are swapped.
+  -- If zero, the final price may also be adjusted with the Orders(offer_price)
+  -- without needing to assign the difference to a specific purchase item.
+  , "purchase_price"  REAL
+      NOT NULL          CHECK (price >= 0.0)
+
+  , FOREIGN KEY         ("sellerID", "versionID", "item")
+    REFERENCES Listings ("userID",   "versionID", "item")
+)
+
+CREATE INDEX IF NOT EXISTS "Purchase__Order"
+  ON OrderPurchases (orderID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Purchase__Seller"
+  ON OrderPurchases (sellerID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Purchase__Version"
+  ON OrderPurchases (versionID)
+  ;
+
+
+CREATE TABLE IF NOT EXISTS "OrderTrades" (
+    "tradeID"      INTEGER
+      PRIMARY KEY
+  , "orderID"      INTEGER
+      NOT NULL
+      REFERENCES     Orders (orderID)
+  
+  , "buyerID"      INTEGER
+      NOT NULL       CHECK (buyerID <> 0)
+      REFERENCES     UserProfiles (userID)
+      ON DELETE      RESTRICT
+      ON UPDATE      RESTRICT
+  , "versionID"    INTEGER
+      NOT NULL       CHECK (versionID <> 0)
+      REFERENCES     ReleaseVersions (userID)
+      ON DELETE      RESTRICT
+      ON UPDATE      RESTRICT
+  , "item"         INTEGER
+      NOT NULL       DEFAULT 1
+
+  -- This is the effective trade value for the Listing;
+  -- if a listing did not exist then it will be created for the order/trade.
+  -- The value may be zero, with an override on the related Orders(offer_price).
+  , "trade_value"  REAL
+      NOT NULL       CHECK (price >= 0.0)
+
+  , FOREIGN KEY         ("buyerID", "versionID", "item")
+    REFERENCES Listings ("userID",  "versionID", "item")
+);
+
+CREATE INDEX IF NOT EXISTS "Trade__Order"
+  ON OrderTrades (orderID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Trade__Buyer"
+  ON OrderTrades (buyerID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Trade__Version"
+  ON OrderTrades (versionID)
   ;
 
 
 CREATE TABLE IF NOT EXISTS "OrderUpdates" (
-    "updateID"  INTEGER
+    "updateID"     INTEGER
       PRIMARY KEY
-  , "orderID"   INTEGER
-      REFERENCES  Orders (orderID)
-
+  , "orderID"      INTEGER
+      NOT NULL       CHECK (orderID <> 0)
+      REFERENCES     Orders (orderID)
   , "update_time"  TEXT  -- YYYY/MM/DD HH:MM:SS
       DEFAULT CURRENT_TIMESTAMP
+
+  , "comment"      TEXT
+      NOT NULL       DEFAULT ""
 );
 
 CREATE INDEX IF NOT EXISTS "Update__Order"
   ON OrderUpdates (orderID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "Update__Timestamp"
+  ON OrderUpdates (update_time)
   ;

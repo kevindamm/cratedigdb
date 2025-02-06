@@ -29,9 +29,18 @@
 -- ledger
 DROP INDEX IF EXISTS "Listing__User";
 DROP INDEX IF EXISTS "Listing__Version";
-DROP INDEX IF EXISTS "Item__Order";
-DROP INDEX IF EXISTS "Item__Seller";
+DROP INDEX IF EXISTS "Listing__Opened";
+DROP INDEX IF EXISTS "Order__Seller";
+DROP INDEX IF EXISTS "Order__Buyer";
+DROP INDEX IF EXISTS "Order__Opened";
+DROP INDEX IF EXISTS "Purchase__Order";
+DROP INDEX IF EXISTS "Purchase__Seller";
+DROP INDEX IF EXISTS "Purchase__Version";
+DROP INDEX IF EXISTS "Trade__Order";
+DROP INDEX IF EXISTS "Trade__Buyer";
+DROP INDEX IF EXISTS "Trade__Version";
 DROP INDEX IF EXISTS "Update__Order";
+DROP INDEX IF EXISTS "Update__Timestamp";
 
 -- collection
 DROP INDEX IF EXISTS "VinylOwned__Version";
