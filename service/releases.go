@@ -30,22 +30,22 @@ import (
 	"github.com/labstack/echo"
 )
 
-func (server *server) getAlbum(ctx echo.Context) error {
-	album_id := ctx.Param("album_id")
-	album, found := server.albums_table[album_id]
+func (server *server) getRelease(ctx echo.Context) error {
+	id := ctx.Param("releaseID")
+	release, found := server.releases_table[id]
 	if !found {
 		return echo.NewHTTPError(http.StatusNotFound,
-			fmt.Sprintf("album %s not found", album_id))
+			fmt.Sprintf("release %s not found", id))
 	}
-	return ctx.JSON(http.StatusOK, album)
+	return ctx.JSON(http.StatusOK, release)
 }
 
-func (server *server) addAlbum(ctx echo.Context) error {
-	album := new(schema.Album)
-	if err := ctx.Bind(album); err != nil {
+func (server *server) addRelease(ctx echo.Context) error {
+	release := new(schema.Release)
+	if err := ctx.Bind(release); err != nil {
 		return err
 	}
 
-	server.albums_table[album.DiscogsID] = album
-	return ctx.JSON(http.StatusCreated, album)
+	server.releases_table[release.ReleaseID] = release
+	return ctx.JSON(http.StatusCreated, release)
 }
