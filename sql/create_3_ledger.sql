@@ -23,6 +23,14 @@
 --
 -- github:kevindamm/cratedigdb/sql/create_3_ledger.sql
 
+CREATE TABLE IF NOT EXISTS "OrderStatus" (
+    "statusID"     INTEGER
+      PRIMARY KEY
+  , "status"       TEXT
+      NOT NULL
+  , "summary"      TEXT
+);
+
 -- 
 -- Database TABLE and INDEX definitions for representing sale amounts and dates
 -- (intended as a convenience for operational organization and tax accounting).
@@ -31,13 +39,16 @@
 --   | Listings |--------index[Inventory__User]
 --   [----------]
 --       |
---       |                   *orderID
---       | N..N     [--------]        (enum)
---       '----------| Orders |--------[OrderState] 1..N
---                  [--------]                   *-----*[OrderHistory]
---                   +buyer, seller FK(userID)           |
---                                                       +index[History__Order]
---
+--       |                *orderID
+--       | N..N   [--------]        (enum)
+--       '--------| Orders |--------[OrderStatus] 1..N
+--                [--------]                   *----*[OrderUpdates]
+--                 +buyer, seller FK(userID)   *--,    |
+--                                                |    +index[Update__Order]
+--                                                |    +index[Update__Timestamp]
+--                                                |
+--                                                |--*[OrderPurchases]
+--                                                '--*[OrderTrades]
 --
 -- These tables are in SQLite3 syntax/semantics, that is the flavor imposed by
 -- Cloudflare D1 (as RDBMS for Workers) and easily interfaced with using golang.
@@ -121,7 +132,13 @@ CREATE TABLE IF NOT EXISTS "Orders" (
   , "last_activity"  TEXT  -- YYYY/MM/DD HH:MM:SS.SSS
       DEFAULT CURRENT_TIMESTAMP
 
-  , "state"          TEXT
+  -- Uses the enumeration defined in OrderStatus, following Discogs guidelines:
+  -- https://support.discogs.com/hc/en-us/articles/360007525494
+  , "status"         INTEGER
+      NOT NULL         DEFAULT 0 -- new, "Invoice Sent"
+      REFERENCES       OrderStatus (statusID)      
+      ON DELETE        RESTRICT
+      ON UPDATE        RESTRICT
 );
 
 CREATE INDEX IF NOT EXISTS "Order__Seller"
@@ -167,7 +184,7 @@ CREATE TABLE IF NOT EXISTS "OrderPurchases" (
 
   , FOREIGN KEY         ("sellerID", "versionID", "item")
     REFERENCES Listings ("userID",   "versionID", "item")
-)
+);
 
 CREATE INDEX IF NOT EXISTS "Purchase__Order"
   ON OrderPurchases (orderID)

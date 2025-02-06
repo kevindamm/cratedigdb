@@ -67,6 +67,35 @@ INSERT INTO DataQuality
 	     , (7, "Complete And Correct",    "For release, artist or label data that is exemplary.")
        ;
 
+-- These values are based on the Discogs support article about status meanings:
+-- https://support.discogs.com/hc/en-us/articles/360007525494
+-- with additional entry "Confirmed" for when a shipped item has been received.
+--
+-- The summaries here are from my paraphrasing of the content there.
+-- They have been ordered arbitrarily, but this ordering does typically happen
+-- in the sequential order defined here.
+INSERT INTO OrderStatus
+    ("statusID", "status", "summary")
+  VALUES (    0, "Invoice Sent"  -- the default value
+               , "An order was made but the buyer has not completed the checkout process and payment has not been sent.")
+       , (    1, "Payment Pending"
+               , "A payment has been sent but has not yet cleared.  This may depend on the underlying payment method taking some time to clear.")
+       , (    2, "Payment Received"
+               , "The buyer has made a payment and the payment has cleared with the bank.")
+       , (    3, "In Progress"
+               , "The seller has received the payment and is preparing the order for shipment.")
+       , (    4, "Shipped"
+               , "The seller has shipped the order to the buyer.")
+       , (    5, "Merged"
+               , "This order has been merged with one or more orders with the same buyer.")
+       , (    6, "Refund Pending"
+               , "The seller has submitted a refund, but the refunded payment is still pending")
+       , (    7, "Confirmed"
+               , "An item which had been shipped has been confirmed as received by the buyer.")
+       , (    8, "Cancelled"
+               , "The order has been cancelled, either by the seller or automatically after not receiving a payment.")
+       ;
+
 
 -- "UNKNOWN" representations
 
