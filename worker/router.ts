@@ -24,12 +24,19 @@
 
 import { fromHono } from 'chanfana'
 import { Hono } from 'hono'
-import { WorkerContext } from './api/request'
+import { WorkerContext } from './api/context'
 import {
 	AddVinylRecord,
 //	RemoveVinylRecord,
 //	FetchVinylRecord
   } from './api/vinyl'
+//import {
+//	CreateVinylListing,
+//	FetchVinylListing,
+//	ListVinylListings,
+//	UpdateVinylListing,
+//	DeleteVinylListing
+//} from './api/listing'
 //import {
 //	AddVinylCrate,
 //	RemoveVinylCrate,
@@ -44,10 +51,9 @@ const openapi = fromHono(app, {
   docs_url: '/spec',
 })
 
-// Register OpenAPI endpoints
+// OpenAPI endpoints
 openapi.get('/search', SearchResults)
-//openapi.get('/vinyl', ListVinylCrate)
-openapi.get('/vinyl/:userid/:versionID/:item', AddVinylRecord)
+openapi.post('/vinyl/:userid/:versionID/:item', AddVinylRecord)
 
 // Middleware and non-API paths.
 function homepage(): (c: WorkerContext) => Promise<Response> {
