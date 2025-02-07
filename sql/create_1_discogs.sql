@@ -485,25 +485,25 @@ CREATE INDEX IF NOT EXISTS "Release__Style"
 --
 
 -- A specific variation or edition or pressing of a release.
-CREATE TABLE IF NOT EXISTS "ReleaseVersions" (
-    "versionID"     INTEGER
+CREATE TABLE IF NOT  EXISTS "ReleaseVersions" (
+    "versionID"      INTEGER
       PRIMARY KEY
-  , "releaseID"     INTEGER
+  , "releaseID"      INTEGER
       NOT NULL
-      REFERENCES  Releases (releaseID)
-      ON DELETE   CASCADE
+      REFERENCES       Releases (releaseID)
+      ON DELETE        CASCADE
 
-  , "title"         TEXT
+  , "title"          TEXT
       NOT NULL
-  , "released"      TEXT  -- year of release
-  , "country"       TEXT  -- country this version was released in
-  , "notes"         TEXT
+  , "year_released"  NUMBER  -- year of release
+  , "country"        TEXT    -- country this version was released in
+  , "notes"          TEXT
 
-  , "data_quality"  INTEGER
-      NOT NULL    DEFAULT 0
-      REFERENCES  DataQuality (dqID)
-      ON DELETE   RESTRICT
-      ON UPDATE   RESTRICT
+  , "data_quality"   INTEGER
+      NOT NULL         DEFAULT 0 -- "needs vote"
+      REFERENCES       DataQuality (dqID)
+      ON DELETE        RESTRICT
+      ON UPDATE        RESTRICT
 );
 
 -- Add the FK relation for each Release's main version.
@@ -516,6 +516,10 @@ ALTER TABLE Releases
 
 CREATE INDEX IF NOT EXISTS "ReleaseVersion__Release"
   ON ReleaseVersions (releaseID)
+  ;
+
+CREATE INDEX IF NOT EXISTS "ReleaseVersion__Year"
+  ON ReleaseVersions (year_released)
   ;
 
 -- Many-to-many relation for ReleaseVersions and Artists.
