@@ -20,42 +20,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/router.ts
+// github:kevindamm/cratedig/worker/api/vinyl/index.ts
 
-import { fromHono } from 'chanfana'
-import { Hono } from 'hono'
-import { WorkerContext } from './api/request'
-import {
-	AddVinylRecord,
-//	RemoveVinylRecord,
-//	FetchVinylRecord
-  } from './api/vinyl'
-//import {
-//	AddVinylCrate,
-//	RemoveVinylCrate,
-//	ListVinylCrate } from './api/crate'
-import { SearchForm, SearchResults } from './api/search'
-
-// Start a Hono app
-const app = new Hono()
-
-// Setup OpenAPI registry
-const openapi = fromHono(app, {
-  docs_url: '/spec',
-})
-
-// Register OpenAPI endpoints
-openapi.get('/search', SearchResults)
-//openapi.get('/vinyl', ListVinylCrate)
-openapi.get('/vinyl/:userid/:versionID/:item', AddVinylRecord)
-
-// Middleware and non-API paths.
-function homepage(): (c: WorkerContext) => Promise<Response> {
-	return async (c: WorkerContext) => {
-		return c.html('workers + D1 + hono + chanfana + zod')
-	}
-}
-app.get('/', homepage())
-
-// Export the Hono app
-export default app
+export { AddVinylRecord } from './add'
+//export { RemoveVinylCrate } from './remove'
+//export { ListVinylCrate } from './list'
