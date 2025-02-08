@@ -42,7 +42,7 @@ export const VinylRecord = z.object({
   userID: z.number().positive().int(),
   releaseID: z.number().positive().int(),
   versionID: z.number().positive().int(),
-  instance: z.number().int(),
+  item: z.number().int(),
 
   crateID: z.string().optional(),
 
@@ -55,5 +55,5 @@ export const VinylRecord = z.object({
   sleeve_grade: Grading.optional(),
 
   tags: z.set(z.string().nonempty()),
-  notes: z.string(),
+  notes: z.string().optional(),
 })
