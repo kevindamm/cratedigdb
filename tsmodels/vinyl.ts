@@ -20,33 +20,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/releases.ts
+// github:kevindamm/cratedig/worker/models/records.ts
 
-import { Int, DateTime } from "chanfana"
 import { z } from "zod"
-import { DataQuality } from "./types"
 
-export const Release = z.object({
-  id: Int().gt(0),
-  data_quality: DataQuality,
+export const Grading = z.enum([
+  "",    // 0 (UNKNOWN)
+  "M",   // 1
+  "NM",  // 2
+  "VG+", // 3
+  "VG",  // 4
+  "G+",  // 5
+  "G",   // 6
+  "F",   // 7
+  "P",   // 8
+])
 
-  title: z.string(),
-  thumb: z.string().url(),
-  year: z.string(),  // pattern: \d{4}
+// A single instance of a musical release,
+// typically a vinyl record, specified in media_format.
+export const VinylRecord = z.object({
+  userID: z.number().positive().int(),
+  releaseID: z.number().positive().int(),
+  versionID: z.number().positive().int(),
+  instance: z.number().int(),
 
-  country: z.string(),
-  tracklist: z.array(z.string()),  // TODO type this out
-  artists: z.array(Int()),
-  credits: z.array(Int()),
-  notes: z.string(),
-})
+  crateID: z.string().optional(),
 
-export const ReleaseVersion = z.object({
-  id: Int().gt(0),
-  data_quality: DataQuality,
-  main_release: Int().gt(0),
+  date_added: z.string().date().nonempty(),
+  date_graded: z.string().date().optional(),
+  date_sold: z.string().date().optional(),
+  date_traded: z.string().date().optional(),
 
-  title: z.string(),
-  when: DateTime(),
+  media_grade: Grading.optional(),
+  sleeve_grade: Grading.optional(),
+
+  tags: z.set(z.string().nonempty()),
   notes: z.string(),
 })
