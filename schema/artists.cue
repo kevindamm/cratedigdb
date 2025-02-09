@@ -20,8 +20,12 @@
 //
 // github:kevindamm/cratedigdb/schema/artists.cue
 
-artistID: number
-mbID:     number
+package cratedigdb
 
-name:    string
-profile: string
+#Artist: {
+  artistID!: number
+  name!:     string
+
+  mbID?:    number
+  profile?: string
+}
