@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Kevin Damm
+// Copyright (c) 2025 Kevin Damm
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,38 +18,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/service/records.go
+// github:kevindamm/cratedigdb/schema/artists.cue
 
-package service
+artistID: number
+mbID:     number
 
-import (
-	"fmt"
-	"net/http"
-
-	"github.com/kevindamm/cratedigdb/schema"
-	"github.com/labstack/echo"
-)
-
-// A record is a specific album version.
-// (in discogs it is either a release or a collection's item)
-
-func (server *server) getRecord(ctx echo.Context) error {
-	record_id := ctx.Param("record_id")
-	record, found := server.records_table[record_id]
-	if !found {
-		return echo.NewHTTPError(http.StatusNotFound,
-			fmt.Sprintf("record %s not found", record_id))
-	}
-	return ctx.JSON(http.StatusOK, record)
-}
-
-func (server *server) addRecord(ctx echo.Context) error {
-	record := new(schema.Record)
-	if err := ctx.Bind(record); err != nil {
-		return err
-	}
-
-	// TODO pre-check whether record has already been added.
-	server.records_table[record.DiscogsID] = record
-	return ctx.JSON(http.StatusCreated, record)
-}
+name:    string
+profile: string
