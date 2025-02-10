@@ -6,7 +6,9 @@ accounting and insurance) and interfacing with Discogs marketplace.
 There are two backend implementations (one in golang using echo and one in
 TypeScript for Cloudflare Workers).  They use the same SQL statements and
 render the same Pug templates but independently run a router and business logic.
-They are implementing the same 
+They are implementing the same basic CRUD service, with the Workers
+implementation also merging results from Discogs in some of its functionality,
+mostly to aid in the recording and grading of inventory.
 
 This allows some portability -- the golang service can be packaged as a single
 file and include the entire inventory as embedded files within the executable.
