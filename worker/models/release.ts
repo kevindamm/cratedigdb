@@ -20,40 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/vinyl.ts
+// github:kevindamm/cratedig/worker/models/release.ts
 
 import { z } from "zod"
 
-export const Grading = z.enum([
-  "",    // 0 (UNKNOWN)
-  "M",   // 1
-  "NM",  // 2
-  "VG+", // 3
-  "VG",  // 4
-  "G+",  // 5
-  "G",   // 6
-  "F",   // 7
-  "P",   // 8
-])
+// Run-time type validators for Releases.
 
-// A single instance of a musical release,
-// typically a vinyl record, specified in media_format.
-export const VinylRecord = z.object({
-  userID: z.number().positive().int(),
-  releaseID: z.number().positive().int(),
-  versionID: z.number().positive().int(),
-  item: z.number().int(),
+export const ReleaseInfo = z.object({
 
-  crateID: z.string().optional(),
+})
 
-  date_added: z.string().date().nonempty(),
-  date_graded: z.string().date().optional(),
-  date_sold: z.string().date().optional(),
-  date_traded: z.string().date().optional(),
+export const ReleaseResource = z.object({
 
-  media_grade: Grading.optional(),
-  sleeve_grade: Grading.optional(),
-
-  tags: z.set(z.string().nonempty()),
-  notes: z.string().optional(),
 })
