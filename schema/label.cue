@@ -23,5 +23,6 @@
 package cratedigdb
 
 #Label: {
-
+  type?: "label"
+  labelID!: uint64
 }

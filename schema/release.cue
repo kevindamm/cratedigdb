@@ -23,5 +23,7 @@
 package cratedigdb
 
 #Release: {
+  type?: "release"
+  releaseID!: uint64
 
 }

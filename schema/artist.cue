@@ -1,4 +1,4 @@
-// Copyright (c) 2024 Kevin Damm
+// Copyright (c) 2025 Kevin Damm
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -18,10 +18,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/schema/versions.cue
+// github:kevindamm/cratedigdb/schema/artists.cue
 
 package cratedigdb
 
-#ReleaseVersion: {
+#Artist: {
+  type?:     "artist"
+  artistID!: uint64
+  name!:     string
 
+  mbID?:    string // UUID
+  profile?: string
 }
