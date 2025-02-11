@@ -65,9 +65,13 @@ CREATE TABLE IF NOT EXISTS "UserProfiles" (
       -- A NULL date_banned value implies the user is not banned.
 );
 
+CREATE INDEX IF NOT EXISTS "User__Username"
+  ON UserProfiles (username)
+  ;
+
 -- Lookup of user ID by their username.
 CREATE UNIQUE INDEX IF NOT EXISTS "User__Active"
-  ON UserProfiles ("userID")
+  ON UserProfiles (userID)
   WHERE (date_banned is NULL)
   ;
 
