@@ -40,7 +40,7 @@ func (version ReleaseVersion) ToJson() string {
 	return string(bytes)
 }
 
-func NewReleaseVersionReader(schema string) JsonParser[ReleaseVersion] {
+func NewReleaseVersionParser(schema string) JsonParser[ReleaseVersion] {
 
 	return func(json string, version *ReleaseVersion) error {
 

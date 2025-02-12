@@ -46,7 +46,7 @@ func (artist Artist) ToJson() string {
 	return string(bytes)
 }
 
-func NewArtistReader(schema string) JsonParser[Artist] {
+func NewArtistParser(schema string) JsonParser[Artist] {
 
 	return func(json string, artist *Artist) error {
 

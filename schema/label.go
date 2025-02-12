@@ -40,7 +40,7 @@ func (label Label) ToJson() string {
 	return string(bytes)
 }
 
-func NewLabelReader(schema string) JsonParser[Label] {
+func NewLabelParser(schema string) JsonParser[Label] {
 
 	return func(json string, label *Label) error {
 

@@ -42,7 +42,7 @@ func (listing Listing) ToJson() string {
 	return string(bytes)
 }
 
-func NewListingReader(schema string) JsonParser[Listing] {
+func NewListingParser(schema string) JsonParser[Listing] {
 
 	return func(json string, listing *Listing) error {
 

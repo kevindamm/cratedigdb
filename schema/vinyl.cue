@@ -18,11 +18,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/schema/version.cue
+// github:kevindamm/cratedigdb/schema/vinyl.cue
 
 package cratedigdb
 
-#ReleaseVersion: {
+#Vinyl: {
   type?: "version"
   versionID!: uint64
 }

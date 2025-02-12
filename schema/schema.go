@@ -24,6 +24,8 @@ package schema
 
 import (
 	"embed"
+	"io"
+	"log"
 )
 
 //go:embed *.cue
@@ -31,4 +33,31 @@ var cueSchema embed.FS
 
 type JsonParser[T Resource] func(json string, value *T) error
 
-var artistReader JsonParser[Artist]
+var artistParser JsonParser[Artist]
+var labelParser JsonParser[Label]
+var listingParser JsonParser[Listing]
+var releaseParser JsonParser[Release]
+var versionParser JsonParser[ReleaseVersion]
+var vinylParser JsonParser[Vinyl]
+
+func init() {
+	artistParser = NewArtistParser(must_read_cue("artist.cue"))
+	labelParser = NewLabelParser(must_read_cue("label.cue"))
+	listingParser = NewListingParser(must_read_cue("listing.cue"))
+	releaseParser = NewReleaseParser(must_read_cue("release.cue"))
+	versionParser = NewReleaseVersionParser(must_read_cue("version.cue"))
+	vinylParser = NewVinylParser(must_read_cue("vinyl.cue"))
+
+}
+
+func must_read_cue(path string) string {
+	reader, err := cueSchema.Open(path)
+	if err != nil {
+		log.Fatal(err)
+	}
+	bytes, err := io.ReadAll(reader)
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
+}

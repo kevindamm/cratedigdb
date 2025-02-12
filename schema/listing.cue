@@ -18,7 +18,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/schema/version.cue
+// github:kevindamm/cratedigdb/schema/listing.cue
 
 package cratedigdb
 
