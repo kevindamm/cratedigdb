@@ -29,6 +29,6 @@ import (
 //go:embed *.cue
 var cueSchema embed.FS
 
-type JsonParser[T any] func(json string) (T, error)
+type JsonParser[T Resource] func(json string, value *T) error
 
-// TODO: typename to JsonReader lookup mapping, constructed from each resource parser and its .cue file
+var artistReader JsonParser[Artist]

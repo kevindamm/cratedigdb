@@ -22,7 +22,11 @@
 
 package schema
 
-import "time"
+import (
+	"encoding/json"
+	"log"
+	"time"
+)
 
 type Vinyl struct {
 	UserID    int64 `json:"vinylID"`
@@ -40,10 +44,19 @@ type Vinyl struct {
 	MediaGrade Grading
 }
 
+func (vinyl Vinyl) Typename() string { return "vinyl" }
+func (vinyl Vinyl) ToJson() string {
+	bytes, err := json.MarshalIndent(vinyl, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
+}
+
 func NewVinylParser(schema string) JsonParser[Vinyl] {
 
-	return func(json string) (Vinyl, error) {
+	return func(json string, vinyl *Vinyl) error {
 
-		return Vinyl{}, nil
+		return nil
 	}
 }

@@ -22,16 +22,30 @@
 
 package schema
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type Listing struct {
-	UserID    int64 `json:"vinylID"`
-	VersionID int64 `json:"versionID"`
-	Item      int   `json:"item"`
+	UserID    uint64 `json:"vinylID"`
+	VersionID uint64 `json:"versionID"`
+	Item      int    `json:"item"`
+}
+
+func (listing Listing) Typename() string { return "listing" }
+func (listing Listing) ToJson() string {
+	bytes, err := json.MarshalIndent(listing, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
 }
 
 func NewListingReader(schema string) JsonParser[Listing] {
 
-	return func(json string) (Listing, error) {
+	return func(json string, listing *Listing) error {
 
-		return Listing{}, nil
+		return nil
 	}
 }

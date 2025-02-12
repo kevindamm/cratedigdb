@@ -22,13 +22,28 @@
 
 package schema
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type ReleaseVersion struct {
 	ID int64 `json:"versionID"`
 }
 
+func (version ReleaseVersion) Typename() string { return "version" }
+func (version ReleaseVersion) ToJson() string {
+	bytes, err := json.MarshalIndent(version, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
+}
+
 func NewReleaseVersionReader(schema string) JsonParser[ReleaseVersion] {
 
-	return func(json string) (ReleaseVersion, error) {
-		return ReleaseVersion{}, nil
+	return func(json string, version *ReleaseVersion) error {
+
+		return nil
 	}
 }

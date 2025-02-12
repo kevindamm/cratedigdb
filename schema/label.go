@@ -22,13 +22,28 @@
 
 package schema
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type Label struct {
-	ID int64 `json:"labelID"`
+	ID uint64 `json:"labelID"`
+}
+
+func (label Label) Typename() string { return "label" }
+func (label Label) ToJson() string {
+	bytes, err := json.MarshalIndent(label, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
 }
 
 func NewLabelReader(schema string) JsonParser[Label] {
 
-	return func(json string) (Label, error) {
-		return Label{}, nil
+	return func(json string, label *Label) error {
+
+		return nil
 	}
 }

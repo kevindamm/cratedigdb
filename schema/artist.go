@@ -22,8 +22,13 @@
 
 package schema
 
+import (
+	"encoding/json"
+	"log"
+)
+
 type Artist struct {
-	ID   int64  `json:"artistID"`
+	ID   uint64 `json:"artistID"`
 	Name string `json:"name"`
 
 	// the artist's musicbrainz ID; a zero value indicates unknown
@@ -32,9 +37,19 @@ type Artist struct {
 	Profile string `json:"profile,omitempty"`
 }
 
+func (artist Artist) Typename() string { return "artist" }
+func (artist Artist) ToJson() string {
+	bytes, err := json.MarshalIndent(artist, "", "  ")
+	if err != nil {
+		log.Fatal(err)
+	}
+	return string(bytes)
+}
+
 func NewArtistReader(schema string) JsonParser[Artist] {
 
-	return func(json string) (Artist, error) {
-		return Artist{}, nil
+	return func(json string, artist *Artist) error {
+
+		return nil
 	}
 }
