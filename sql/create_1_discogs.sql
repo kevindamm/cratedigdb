@@ -1,4 +1,4 @@
--- SQL statements for creating all tables in the cratedig database
+-- SQL statements for creating all discogs-related CrateDig DB tables.
 -- Copyright (c) 2025, Kevin Damm
 -- All rights reserved.
 -- MIT License:
@@ -263,10 +263,6 @@ CREATE TABLE IF NOT EXISTS "Artist_Avatars" (
 CREATE INDEX IF NOT EXISTS "Avatar__Artist"
   ON Artist_Avatars (artistID)
   ;
-CREATE INDEX IF NOT EXISTS "Avatar__Image"
-  ON Artist_Avatars (imageID)
-  ;
-
 
 --
 -- RECORD LABELS

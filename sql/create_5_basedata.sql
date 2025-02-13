@@ -21,7 +21,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --
--- github:kevindamm/cratedigdb/sql/create_basedata.sql
+-- github:kevindamm/cratedigdb/sql/create_5_basedata.sql
 
 -- BASE DATA
 -- Contains INSERT statements for initial records and relations.
@@ -99,7 +99,7 @@ INSERT INTO OrderStatus
 
 -- "UNKNOWN" representations
 
-INSERT INTO UserProfiles
+INSERT INTO UserAccounts
     ("userID", "username",     "fullname", "date_banned")
   VALUES (  0,  "unknown", "UNKNOWN USER",  "2025-01-23");
 

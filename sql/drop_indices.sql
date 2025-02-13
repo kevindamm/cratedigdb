@@ -48,6 +48,10 @@ DROP INDEX IF EXISTS "VinylOwned__Release";
 DROP INDEX IF EXISTS "VinylOwned__User";
 DROP INDEX IF EXISTS "UserCrates__Public";
 DROP INDEX IF EXISTS "UserCrates__All";
+
+-- accounts
+DROP INDEX IF EXISTS "Token__User";
+DROP INDEX IF EXISTS "Avatar__User";
 DROP INDEX IF EXISTS "User__Active";
 
 -- artists and groups
@@ -57,7 +61,6 @@ DROP INDEX IF EXISTS "URL__Artist";
 DROP INDEX IF EXISTS "Name__Artist";
 DROP INDEX IF EXISTS "Alias__Artist";
 DROP INDEX IF EXISTS "Avatar__Artist";
-DROP INDEX IF EXISTS "Avatar__Image";
 
 -- record labels
 DROP INDEX IF EXISTS "URL__Label";

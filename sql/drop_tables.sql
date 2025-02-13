@@ -26,7 +26,7 @@
 -- DROP (if exists) all TABLE definitions.
 -- Drop these after dropping the indices.
 
--- TODO (drop ledger tables)
+-- drop ledger tables
 DROP TABLE IF EXISTS "OrderUpdates";
 DROP TABLE IF EXISTS "OrderPurchases";
 DROP TABLE IF EXISTS "OrderTrades";
@@ -40,7 +40,11 @@ DROP TABLE IF EXISTS "TagNames";
 DROP TABLE IF EXISTS "VinylItems";
 DROP TABLE IF EXISTS "Crates";
 DROP TABLE IF EXISTS "Grading";
-DROP TABLE IF EXISTS "UserProfiles";
+
+-- drop accounts tables
+DROP TABLE IF EXISTS "User_Avatars";
+DROP TABLE IF EXISTS "User_Tokens";
+DROP TABLE IF EXISTS "UserAccounts";
 
 -- drop discogs tables
 DROP TABLE IF EXISTS "Track_Styles";

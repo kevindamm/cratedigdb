@@ -1,4 +1,4 @@
--- SQL statements for creating all tables in the cratedig database
+-- SQL statements for creating all ledger-related CrateDig DB tables.
 -- Copyright (c) 2025, Kevin Damm
 -- All rights reserved.
 -- MIT License:
@@ -21,7 +21,7 @@
 -- OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 -- SOFTWARE.
 --
--- github:kevindamm/cratedigdb/sql/create_3_ledger.sql
+-- github:kevindamm/cratedigdb/sql/create_4_ledger.sql
 
 CREATE TABLE IF NOT EXISTS "OrderStatus" (
     "statusID"     INTEGER
