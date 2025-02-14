@@ -137,3 +137,34 @@ export function StatusFromCode(code: number): ResponseStatus {
   }
   return STATUS_FROM_CODE[code]
 }
+
+// Adjusts the CrateDig search request to match the Discogs Search API.
+export const TransformSearchRequest = (request: {
+  q       ?: string
+  type    ?: string
+  title   ?: string
+  artist  ?: string
+  release ?: string
+  track   ?: string
+  credit  ?: string
+  label   ?: string
+  genre   ?: string
+  style   ?: string
+  country ?: string
+  year    ?: string
+  format  ?: string
+  barcode ?: string
+}) => {
+  var discogs_params = request as Record<string, string>
+  if (request.type === 'release') {
+    discogs_params['type'] = 'master'
+  } else if (request.type === 'version') {
+    discogs_params['type'] = 'release'
+  }
+  if (request.release) {
+    discogs_params['release_title'] = discogs_params['release']
+    delete discogs_params['release']
+  }
+
+  return discogs_params
+}
