@@ -20,12 +20,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/api/crate/add.ts
+// github:kevindamm/cratedigdb/worker/api/crate/add.ts
 
 import { Bool, Num, OpenAPIRoute, Str } from 'chanfana'
 import { z } from 'zod'
 import { VinylRecord } from '../../models'
-import { WorkerContext } from '../request'
+import { WorkerContext } from '../../context'
 
 export class AddVinylRecord extends OpenAPIRoute {
 	schema = {

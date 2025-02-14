@@ -20,13 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/filetypes.d.ts
+// github:kevindamm/cratedig/worker/homepage.ts
 
-declare module '*.html' {
-  const value: string;
-  export default value
-}
-declare module "*.pug" {
-	const value: string;
-	export default value;
+import HOMEPAGE_PUG from '../templates/home.html.pug'
+import { WorkerContext } from './context'
+import { compile } from 'pug'
+
+export async function homepage(c: WorkerContext): Promise<Response> {
+  const TEMPLATE = compile(HOMEPAGE_PUG)
+  const HOMEPAGE = TEMPLATE({
+    pageTitle: 'Home',
+    siteTitle: 'Crate Digging',
+  })
+	return c.html(HOMEPAGE_PUG) // HOMEPAGE)
 }

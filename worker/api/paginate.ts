@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/api/paginate.ts
+// github:kevindamm/cratedigdb/worker/api/paginate.ts
 
 import { z } from 'zod'
 

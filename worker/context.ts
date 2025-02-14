@@ -20,13 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/filetypes.d.ts
+// github:kevindamm/cratedigdb/worker/context.ts
 
-declare module '*.html' {
-  const value: string;
-  export default value
-}
-declare module "*.pug" {
-	const value: string;
-	export default value;
-}
+import { Context } from 'hono'
+
+export type WorkerContext = Context<{ Bindings: {
+  DB: D1Database,
+
+  // Takes priority over the auth key, auth secret;
+  // if both are defined then this token is used.
+  DISCOGS_USER_TOKEN: string,
+
+  // Secrets used for performing the OAuth 1.0 handshake with Discogs for user authentication.
+  DISCOGS_AUTH_KEY: string,
+  DISCOGS_AUTH_SECRET: string,
+}}>

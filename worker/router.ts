@@ -24,44 +24,59 @@
 
 import { fromHono } from 'chanfana'
 import { Hono } from 'hono'
-import { WorkerContext } from './api/context'
-import {
-	AddVinylRecord,
+import { WorkerContext } from './context'
+
+//import {
+//  AddVinylRecord,
 //	RemoveVinylRecord,
 //	FetchVinylRecord
-  } from './api/vinyl'
+//} from './api/vinyl'
 //import {
 //	CreateVinylListing,
 //	FetchVinylListing,
 //	ListVinylListings,
-//	UpdateVinylListing,
+//	UpsertVinylListing,
 //	DeleteVinylListing
 //} from './api/listing'
 //import {
 //	AddVinylCrate,
 //	RemoveVinylCrate,
-//	ListVinylCrate } from './api/crate'
-import { SearchForm, SearchResults } from './api/search'
+//	ListVinylCrate
+//} from './api/crate'
+import { DiscogsSearch } from './api/search'
+import { homepage } from './homepage'
 
 // Start a Hono app
 const app = new Hono()
 
 // Setup OpenAPI registry
 const openapi = fromHono(app, {
-  docs_url: '/spec',
+  docs_url: '/docs',
 })
 
 // OpenAPI endpoints
-openapi.get('/search', SearchResults)
-openapi.post('/vinyl/:userid/:versionID/:item', AddVinylRecord)
+openapi.get('/search', DiscogsSearch)
+//openapi.get('/artist', ListArtists)
+//openapi.get('/artist/:artistID', GetArtist)
+//openapi.post('/artist/:artistID', UpsertArtist)
+//openapi.delete('/artist/:artistID', DeleteArtist)
+
+//openapi.get('/release', ListReleases)
+//openapi.get('/release/:releaseID', GetRelease)
+//openapi.post('/release/:releaseID', UpsertRelease)
+//openapi.delete('/release/:releaseID', DeleteRelease)
+
+//openapi.get('/record', ListReleases)
+//openapi.get('/record/:releaseID', GetRelease)
+//openapi.post('/record/:releaseID', UpsertRelease)
+//openapi.delete('/record/:releaseID', DeleteRelease)
+
+//openapi.get('/vinyl/:username', ListCollection)
+//openapi.post('/vinyl/:username/:versionID', AddVinylRecord)
+//openapi.post('/vinyl/:username/:versionID/:item', AddVinylRecord)
 
 // Middleware and non-API paths.
-function homepage(): (c: WorkerContext) => Promise<Response> {
-	return async (c: WorkerContext) => {
-		return c.html('workers + D1 + hono + chanfana + zod')
-	}
-}
-app.get('/', homepage())
+app.get('/', homepage)
 
-// Export the Hono app
+// The Hono app fully implements the Workers API.
 export default app

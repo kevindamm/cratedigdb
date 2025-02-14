@@ -20,13 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/filetypes.d.ts
+// github:kevindamm/cratedigdb/worker/api/search.ts
 
-declare module '*.html' {
-  const value: string;
-  export default value
-}
-declare module "*.pug" {
-	const value: string;
-	export default value;
+import { OpenAPIRoute } from 'chanfana';
+import { z } from "zod"
+import { WorkerContext } from '../context'
+
+export class DiscogsSearch extends OpenAPIRoute {
+  schema = {
+
+  }
+
+  async handle(c: WorkerContext) {}
 }
