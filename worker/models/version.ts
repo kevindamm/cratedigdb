@@ -20,14 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/version.ts
+// github:kevindamm/cratedigdb/worker/models/version.ts
 
 import { z } from "zod"
 
+// A simplified ReleaseVersion representation, typically used when embedded in a resource.
 export const ReleaseVersionInfo = z.object({
 
 })
 
+// A ReleaseVersion representation with details and related info.
 export const ReleaseVersionResource = z.object({
 
 })

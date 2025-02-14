@@ -20,14 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/label.ts
+// github:kevindamm/cratedigdb/worker/models/account.ts
 
-import { z } from "zod"
+import { z } from 'zod'
+import { ImageInfo } from './image'
 
-export const RecordLabelInfo = z.object({
-
+export const UserInfo = z.object({
+  id: z.coerce.number().positive(),
+  username: z.string().nonempty(),
+  active: z.boolean().optional(),
 })
 
-export const RecordLabelResource = z.object({
+export const UserAccount = z.object({
+  id: z.coerce.number().positive(),
+  username: z.string().nonempty(),
 
+  fullname: z.string().optional(),
+  about: z.string().optional(),
+  discogsID: z.string().optional(),
+
+  avatar: z.string().url(),
 })

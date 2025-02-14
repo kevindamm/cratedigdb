@@ -20,15 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/image.ts
+// github:kevindamm/cratedigdb/worker/models/image.ts
 
 import { z } from "zod"
 
 export const ImageInfo = z.object({
+  type: z.enum(["primary", "secondary"]),
   width: z.number(),
   height: z.number(),
-  type: z.enum(["primary", "secondary"]),
-  resource_url: z.string().url(),
+
+  // These will be the empty string for unauthenticated requests.
+  resource_url: z.string().url().optional(),
   uri: z.string().url().optional(),
   uri150: z.string().url().optional(),
 })

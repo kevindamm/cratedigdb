@@ -20,14 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/label.ts
+// github:kevindamm/cratedigdb/worker/models/listing.ts
 
 import { z } from "zod"
+import { UserInfo } from "./account"
+import { ReleaseVersionInfo } from "./version"
 
-export const RecordLabelInfo = z.object({
+// A simplified Listing representation, typically used when embedded in a
+// resource like Order details and the page of a seller's available listings.
+export const ListingInfo = z.object({
+  userID: z.number().positive(),
+  versionID: z.number().positive(),
+  item: z.number().positive(),
 
 })
 
-export const RecordLabelResource = z.object({
+// A Listing representation with details and related info.
+export const ListingResource = z.object({
+  user: UserInfo,
+  version: ReleaseVersionInfo,
 
+  // TODO
 })

@@ -20,12 +20,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/artist.ts
+// github:kevindamm/cratedigdb/worker/models/artist.ts
 
-import { z } from "zod"
-import { ImageInfo } from "./image"
-import { DataQuality } from "./data_quality"
+import { z } from 'zod'
+import { ImageInfo } from './image'
+import { DataQuality } from './data_quality'
 
+// A simplified Artist representation, typically used when embedded in a resource.
 export const ArtistInfo = z.object({
   id: z.coerce.number().positive(),
   active: z.boolean(),
@@ -33,6 +34,7 @@ export const ArtistInfo = z.object({
   resource_url: z.string().url(),
 })
 
+// An Artist representation with details and related info.
 export const ArtistResource = z.object({
   id: z.coerce.number().positive(),
   resource_url: z.string().url(),

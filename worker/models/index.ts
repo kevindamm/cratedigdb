@@ -20,27 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/index.ts
+// github:kevindamm/cratedigdb/worker/models/index.ts
 
-export { DataQuality } from "./data_quality"
-export { ImageInfo } from "./image"
-
-export {
-  RecordLabelInfo,
-  RecordLabelResource
-} from "./label"
+export { DataQuality } from './data_quality'
+export { ImageInfo } from './image'
 
 export {
   ArtistInfo,
   ArtistResource
-} from "./artist"
+} from './artist'
+
+export {
+  RecordLabelInfo,
+  RecordLabelResource
+} from './label'
 
 export {
   ReleaseInfo,
   ReleaseResource,
-} from "./release"
+} from './release'
 
 export {
   ReleaseVersionInfo,
   ReleaseVersionResource
-} from "./version"
+} from './version'
+
+export {
+  Grading,
+  VinylRecord
+} from './vinyl'
+
+export {
+  ListingInfo,
+  ListingResource
+} from './listing'

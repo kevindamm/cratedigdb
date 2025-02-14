@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/data_quality.ts
+// github:kevindamm/cratedigdb/worker/models/data_quality.ts
 
 import { z } from "zod"
 

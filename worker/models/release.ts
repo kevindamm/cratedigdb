@@ -20,16 +20,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/release.ts
+// github:kevindamm/cratedigdb/worker/models/release.ts
 
 import { z } from "zod"
 
-// Run-time type validators for Releases.
-
+// A simplified Release representation, typically used when embedded in a resource.
 export const ReleaseInfo = z.object({
 
 })
 
+// A Release representation with details and related info.
 export const ReleaseResource = z.object({
 
 })
