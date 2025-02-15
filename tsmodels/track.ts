@@ -20,18 +20,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/data_quality.ts
+// github:kevindamm/cratedigdb/tsmodels/track.ts
 
 import { z } from "zod"
+import { ArtistInfo } from "./artist"
 
-// Data quality with index matching its enum in SQL.
-export const DataQuality = z.enum([
-    "Needs Vote",
-    "Entirely Incorrect",
-    "Entirely Incorrect Edit",
-    "Needs Major Changes",
-    "Needs Minor Changes",
-    "Correct",
-    "Disagreement",
-    "Complete And Correct",
-    ])
+export const TrackInfo = z.object({
+  position: z.string(),
+  artists: z.array(ArtistInfo),
+  title: z.string(),
+  featured: z.array(ArtistInfo).optional(),
+  duration: z.string(),
+})

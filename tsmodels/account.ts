@@ -20,32 +20,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/artist.ts
+// github:kevindamm/cratedigdb/tsmodels/account.ts
 
 import { z } from 'zod'
 import { ImageInfo } from './image'
-import { DataQuality } from './data_quality'
 
-// A simplified Artist representation, typically used when embedded in a resource.
-export const ArtistInfo = z.object({
+export const UserInfo = z.object({
   id: z.coerce.number().positive(),
-  active: z.boolean(),
-  name: z.string().nonempty(),
-  resource_url: z.string().url(),
+  username: z.string().nonempty(),
+  active: z.boolean().optional(),
 })
 
-// An Artist representation with details and related info.
-export const ArtistResource = z.object({
+export const UserAccount = z.object({
   id: z.coerce.number().positive(),
-  resource_url: z.string().url(),
-  namevariations: z.array(z.string()),
-  releases_url: z.string().url(),
+  username: z.string().nonempty(),
 
-  profile: z.string().optional(),
-  uri: z.string().url().optional(),
-  urls: z.array(z.string().url()),
+  fullname: z.string().optional(),
+  about: z.string().optional(),
+  discogsID: z.string().optional(),
 
-  images: z.array(ImageInfo),
-  members: z.array(ArtistInfo),
-  data_quality: DataQuality,
+  avatar: z.string().url(),
 })

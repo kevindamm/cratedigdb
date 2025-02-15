@@ -20,17 +20,47 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/image.ts
+// github:kevindamm/cratedigdb/tsmodels/version.ts
 
 import { z } from "zod"
+import { ArtistInfo } from "./artist"
+import { ImageInfo } from "./image"
+import { RecordLabelInfo } from "./label"
+import { TrackInfo } from "./track"
 
-export const ImageInfo = z.object({
-  type: z.enum(["primary", "secondary"]),
-  width: z.number(),
-  height: z.number(),
+export type MediaFormatType = (
+    'Box Set'
+  | 'Cassette'
+  | 'CD'
+  | 'File'
+  | 'Vinyl'
+)
 
-  // These will be the empty string for unauthenticated requests.
-  resource_url: z.string().url().optional(),
-  uri: z.string().url().optional(),
-  uri150: z.string().url().optional(),
+export const MediaFormats = [
+  'Box Set',
+  'Cassette',
+  'CD',
+  'File',
+  'Vinyl',
+] as const satisfies MediaFormatType[]
+
+// A simplified ReleaseVersion representation, typically used when embedded in a resource.
+export const ReleaseVersionInfo = z.object({
+  artists: z.array(ArtistInfo),
+  title: z.string(),
+  featured: z.array(ArtistInfo),
+  labels: z.array(RecordLabelInfo),
+  formats: z.array(z.enum(MediaFormats)),
+  images: z.array(ImageInfo),
+  genres: z.array(z.string()),
+  styles: z.array(z.string()),
+  country: z.string(),
+  released: z.string(),
+  notes: z.string().optional(),
+  tracklist: z.array(TrackInfo),
+})
+
+// A ReleaseVersion representation with details and related info.
+export const ReleaseVersionResource = z.object({
+  // TODO
 })

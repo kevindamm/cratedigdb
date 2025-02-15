@@ -20,9 +20,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/records.ts
+// github:kevindamm/cratedigdb/tsmodels/vinyl.ts
 
-import { z } from "zod"
+import { z } from 'zod'
 
 export const Grading = z.enum([
   "",    // 0 (UNKNOWN)
@@ -36,15 +36,14 @@ export const Grading = z.enum([
   "P",   // 8
 ])
 
-// A single instance of a musical release,
-// typically a vinyl record, specified in media_format.
+// An item in a vinyl collection, with details and related info.
 export const VinylRecord = z.object({
   userID: z.number().positive().int(),
-  releaseID: z.number().positive().int(),
   versionID: z.number().positive().int(),
-  instance: z.number().int(),
+  item: z.number().int(),
 
   crateID: z.string().optional(),
+  releaseID: z.number().positive().int(),
 
   date_added: z.string().date().nonempty(),
   date_graded: z.string().date().optional(),
@@ -55,5 +54,5 @@ export const VinylRecord = z.object({
   sleeve_grade: Grading.optional(),
 
   tags: z.set(z.string().nonempty()),
-  notes: z.string(),
+  notes: z.string().optional(),
 })

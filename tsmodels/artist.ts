@@ -20,41 +20,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/releases.ts
+// github:kevindamm/cratedigdb/tsmodels/artist.ts
 
-import { z } from "zod"
+import { z } from 'zod'
+import { ImageInfo } from './image'
+import { DataQuality } from './data_quality'
 
-export const DataQuality = z.enum([
-  "New Submission",
-  "Recently Edited",
-  "Correct",
-  "Needs Vote",
-  "Needs Major Changes",
-  "Needs Minor Changes",
-  "Entirely Incorrect",
-])
-
-export const Release = z.object({
-  releaseID: z.number().positive().int(),
-  data_quality: DataQuality,
-
-  title: z.string().nonempty(),
-  thumb: z.string().url(),
-  year: z.string(),  // pattern: \d{4}
-
-  country: z.string(),
-  tracklist: z.array(z.string()),  // TODO type this out
-  artist_ids: z.array(z.number().positive().int()),
-  credit_ids: z.array(z.number().positive().int()),
-  notes: z.string(),
+// A simplified Artist representation, typically used when embedded in a resource.
+export const ArtistInfo = z.object({
+  id: z.coerce.number().positive(),
+  active: z.boolean(),
+  name: z.string().nonempty(),
+  resource_url: z.string().url(),
+  tracks: z.array(z.string()),
+  join: z.string(),
 })
 
-export const ReleaseVersion = z.object({
-  releaseID: z.number().positive().int(),
-  versionID: z.number().positive().int(),
-  data_quality: DataQuality,
+// An Artist representation with details and related info.
+export const ArtistResource = z.object({
+  id: z.coerce.number().positive(),
+  resource_url: z.string().url(),
+  namevariations: z.array(z.string()),
+  releases_url: z.string().url(),
 
-  title: z.string(),
-  when: z.string().date(),
-  notes: z.string(),
+  profile: z.string().optional(),
+  uri: z.string().url().optional(),
+  urls: z.array(z.string().url()),
+
+  images: z.array(ImageInfo),
+  members: z.array(ArtistInfo),
+  data_quality: DataQuality,
 })

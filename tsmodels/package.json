@@ -1,0 +1,16 @@
+{
+  "name": "@cratedigdb/types",
+  "version": "0.2.0",
+  "types": "./index.d.ts",
+  "description": "Types and Zod constraints for CrateDig DB, a webapp for managing vinyl record collections.",
+  "keywords": ["vinyl", "collection", "typescript"],
+  "homepage": "https://vinyl.kevindamm.com/",
+  "bugs": {
+    "url": "https://github.com/kevindamm/cratedigdb/issues"
+  },
+  "license": "MIT",
+
+  "dependencies": {
+    "zod": "^3.24"
+  }
+}

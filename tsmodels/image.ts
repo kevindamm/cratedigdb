@@ -20,24 +20,17 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/account.ts
+// github:kevindamm/cratedigdb/tsmodels/image.ts
 
-import { z } from 'zod'
-import { ImageInfo } from './image'
+import { z } from "zod"
 
-export const UserInfo = z.object({
-  id: z.coerce.number().positive(),
-  username: z.string().nonempty(),
-  active: z.boolean().optional(),
-})
+export const ImageInfo = z.object({
+  type: z.enum(["primary", "secondary"]),
+  width: z.number(),
+  height: z.number(),
 
-export const UserAccount = z.object({
-  id: z.coerce.number().positive(),
-  username: z.string().nonempty(),
-
-  fullname: z.string().optional(),
-  about: z.string().optional(),
-  discogsID: z.string().optional(),
-
-  avatar: z.string().url(),
+  // These will be the empty string for unauthenticated requests.
+  resource_url: z.string().url().optional(),
+  uri: z.string().url().optional(),
+  uri150: z.string().url().optional(),
 })

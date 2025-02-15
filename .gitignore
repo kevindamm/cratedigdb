@@ -22,3 +22,38 @@ MusicMetadata.7z
 
 # Go workspace file
 go.work
+
+# wrangler project
+.dev.vars
+.wrangler
+
+# Logs
+logs
+_.log
+npm-debug.log_
+\*.tgz
+
+# Diagnostic reports (https://nodejs.org/api/report.html)
+report.[0-9]_.[0-9]_.[0-9]_.[0-9]_.json
+
+# Runtime data
+pids
+_.pid
+_.seed
+\*.pid.lock
+
+# Dependency directories
+node_modules/
+.node_repl_history
+.npm
+.eslintcache
+
+# TypeScript cache
+\*.tsbuildinfo
+
+# dotenv environment variable files
+.env
+.env.development.local
+.env.test.local
+.env.production.local
+.env.local

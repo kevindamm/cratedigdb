@@ -20,27 +20,37 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/artists.ts
+// github:kevindamm/cratedigdb/tsmodels/index.d.ts
 
-import { Int, Str } from "chanfana"
-import { z } from "zod"
-import { DataQuality } from "./types"
+export { DataQuality } from './data_quality'
+export { ImageInfo } from './image'
 
-export const Artist = z.object({
-  id: Int().gt(0),
-  data_quality: DataQuality,
+export {
+  ArtistInfo,
+  ArtistResource
+} from './artist'
 
-  name: Str(),
-  real_name: Str(),
-  profile: Str(),
-  anv: z.array(Str()),
-  aliases: z.array(Str()),
-  urls: z.array(Str().url()),
+export {
+  RecordLabelInfo,
+  RecordLabelResource
+} from './label'
 
-  masters: z.array(Str()),
-  releases: z.array(Str()),
-  category: Str(),
+export {
+  ReleaseInfo,
+  ReleaseResource,
+} from './release'
 
-  groups: z.array(Str()),
-  members: z.array(Str()),
-})
+export {
+  ReleaseVersionInfo,
+  ReleaseVersionResource
+} from './version'
+
+export {
+  Grading,
+  VinylRecord
+} from './vinyl'
+
+export {
+  ListingInfo,
+  ListingResource
+} from './listing'

@@ -20,17 +20,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/users.ts
+// github:kevindamm/cratedigdb/tsmodels/listing.ts
 
 import { z } from "zod"
+import { UserInfo } from "./account"
+import { ReleaseVersionInfo } from "./version"
 
-export const UserProfile = z.object({
-  userID: z.number().int().gt(0),
-  username: z.string().nonempty(),
-  fullname: z.string().nonempty(),
-  discogsID: z.string().optional(),
+// A simplified Listing representation, typically used when embedded in a
+// resource like Order details and the page of a seller's available listings.
+export const ListingInfo = z.object({
+  userID: z.number().positive(),
+  versionID: z.number().positive(),
+  item: z.number().positive(),
 
-  about: z.string(),
-  avatarURL: z.string().url().optional(),
-  date_banned: z.string().url().optional(),
+})
+
+// A Listing representation with details and related info.
+export const ListingResource = z.object({
+  user: UserInfo,
+  version: ReleaseVersionInfo,
+
+  // TODO
 })

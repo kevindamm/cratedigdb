@@ -20,25 +20,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/worker/models/listing.ts
+// github:kevindamm/cratedigdb/tsmodels/data_quality.ts
 
 import { z } from "zod"
-import { UserInfo } from "./account"
-import { ReleaseVersionInfo } from "./version"
 
-// A simplified Listing representation, typically used when embedded in a
-// resource like Order details and the page of a seller's available listings.
-export const ListingInfo = z.object({
-  userID: z.number().positive(),
-  versionID: z.number().positive(),
-  item: z.number().positive(),
-
-})
-
-// A Listing representation with details and related info.
-export const ListingResource = z.object({
-  user: UserInfo,
-  version: ReleaseVersionInfo,
-
-  // TODO
-})
+// Data quality with index matching its enum in SQL.
+export const DataQuality = z.enum([
+    "Needs Vote",
+    "Entirely Incorrect",
+    "Entirely Incorrect Edit",
+    "Needs Major Changes",
+    "Needs Minor Changes",
+    "Correct",
+    "Disagreement",
+    "Complete And Correct",
+    ])

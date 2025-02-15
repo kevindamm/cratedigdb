@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedig/worker/models/crates.ts
+// github:kevindamm/cratedigdb/tsmodels/crates.ts
 
 import { z } from "zod"
 import { VinylRecord } from "./vinyl"
