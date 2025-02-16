@@ -20,7 +20,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
 // SOFTWARE.
 //
-// github:kevindamm/cratedigdb/tsmodels/releases.ts
+// github:kevindamm/cratedigdb/tsmodels/release.ts
 
 import { z } from "zod"
 
@@ -34,7 +34,13 @@ export const DataQuality = z.enum([
   "Entirely Incorrect",
 ])
 
-export const Release = z.object({
+export const ReleaseInfo = z.object({
+  releaseiD: z.number().positive().int(),
+  title: z.string().nonempty(),
+  year: z.string(),
+})
+
+export const ReleaseResource = z.object({
   releaseID: z.number().positive().int(),
   data_quality: DataQuality,
 
@@ -42,19 +48,9 @@ export const Release = z.object({
   thumb: z.string().url(),
   year: z.string(),  // pattern: \d{4}
 
-  country: z.string(),
   tracklist: z.array(z.string()),  // TODO type this out
   artist_ids: z.array(z.number().positive().int()),
   credit_ids: z.array(z.number().positive().int()),
   notes: z.string(),
 })
 
-export const ReleaseVersion = z.object({
-  releaseID: z.number().positive().int(),
-  versionID: z.number().positive().int(),
-  data_quality: DataQuality,
-
-  title: z.string(),
-  when: z.string().date(),
-  notes: z.string(),
-})

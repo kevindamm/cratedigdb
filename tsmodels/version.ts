@@ -27,6 +27,7 @@ import { ArtistInfo } from "./artist"
 import { ImageInfo } from "./image"
 import { RecordLabelInfo } from "./label"
 import { TrackInfo } from "./track"
+import { DataQuality } from "./data_quality"
 
 export type MediaFormatType = (
     'Box Set'
@@ -46,21 +47,24 @@ export const MediaFormats = [
 
 // A simplified ReleaseVersion representation, typically used when embedded in a resource.
 export const ReleaseVersionInfo = z.object({
-  artists: z.array(ArtistInfo),
+  releaseID: z.number().positive().int(),
+  versionID: z.number().positive().int(),
+  data_quality: DataQuality,
+
   title: z.string(),
-  featured: z.array(ArtistInfo),
-  labels: z.array(RecordLabelInfo),
-  formats: z.array(z.enum(MediaFormats)),
-  images: z.array(ImageInfo),
-  genres: z.array(z.string()),
-  styles: z.array(z.string()),
-  country: z.string(),
-  released: z.string(),
-  notes: z.string().optional(),
-  tracklist: z.array(TrackInfo),
+  release_date: z.string().date(),
 })
 
 // A ReleaseVersion representation with details and related info.
-export const ReleaseVersionResource = z.object({
-  // TODO
+export const ReleaseVersionResource = ReleaseVersionInfo.extend({
+  artists: ArtistInfo.array(),
+  featured: ArtistInfo.array(),
+  labels: RecordLabelInfo.array(),
+  formats: z.enum(MediaFormats).array(),
+  images: ImageInfo.array(),
+  genres: z.string().array(),
+  styles: z.string().array(),
+  country: z.string().optional(),
+  notes: z.string().optional(),
+  tracklist: TrackInfo.array(),
 })
