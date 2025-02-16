@@ -2,6 +2,12 @@
 name = "cratedig"
 main = "router.ts"
 compatibility_date = "2025-01-09"
+compatibility_flags = ["nodejs_compat"]
+
+[[rules]]
+type = "Text"
+globs = ["**/*.pug"]
+fallthrough = false
 
 # https://developers.cloudflare.com/workers/observability/logs/workers-logs/
 [observability]
@@ -15,7 +21,7 @@ database_id = "931bf6dc-4e8c-4b64-912d-ec1c4403ca28"
 
 # R2: https://developers.cloudflare.com/r2/
 # [[r2_buckets]]
-# binding = "IMAGES"
+# binding = "COVERART"
 # bucket_name = "cover-art"
 
 # Vectorize: https://developers.cloudflare.com/vectorize
