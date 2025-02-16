@@ -33,7 +33,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/kevindamm/cratedig/service"
+	service "github.com/kevindamm/cratedigdb/echo"
 )
 
 func main() {
