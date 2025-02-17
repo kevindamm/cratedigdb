@@ -22,7 +22,9 @@
 
 package cratedigdb
 
-#ReleaseVersion: {
-  type?: "version"
-  versionID!: uint64
+#Listing: {
+  type?: "listing"
+  userID: uint64
+  versionID: uint64
+  item: uint
 }

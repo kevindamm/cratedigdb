@@ -28,7 +28,7 @@ import (
 )
 
 type Release struct {
-	ID int64 `json:"releaseID"`
+	ID uint64 `json:"releaseID"`
 }
 
 func (release Release) Typename() string { return "release" }

@@ -30,7 +30,7 @@ import (
 type Listing struct {
 	UserID    uint64 `json:"vinylID"`
 	VersionID uint64 `json:"versionID"`
-	Item      int    `json:"item"`
+	Item      uint   `json:"item"`
 }
 
 func (listing Listing) Typename() string { return "listing" }
