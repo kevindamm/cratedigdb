@@ -45,10 +45,11 @@
 --
 -- The tables are grouped in the following order:
 --   Enumerationss & Assets
---   Artists
+--   Artists (and Groups)
 --   Labels
 --   Releases
 --   ReleaseVersions
+--   Tracks (and Tracklists)
 --
 -- These tables are in SQLite3 syntax/semantics, that is the flavor imposed by
 -- Cloudflare D1 (as RDBMS for Workers) and easily interfaced with using golang.
@@ -62,7 +63,10 @@
 --
 -- ENUMERATIONS
 --
--- Data Quality, Genres, Styles
+-- DataQuality
+-- MediaFormats
+-- Genres
+-- Styles
 --
 
 -- An enum table for the latest status of voting on data quality
@@ -114,7 +118,7 @@ CREATE TABLE IF NOT EXISTS "Styles" (
 );
 
 --
--- ASSETS
+-- ASSETS (ImageData)
 --
 
 -- ImageData reflects a path to where the asset can be found and some metadata.
