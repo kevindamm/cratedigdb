@@ -51,6 +51,7 @@ DROP TABLE IF EXISTS "Track_Styles";
 DROP TABLE IF EXISTS "Track_Artists";
 DROP TABLE IF EXISTS "Tracks";
 
+DROP TABLE IF EXISTS "ReleaseVersion_MediaArt";
 DROP TABLE IF EXISTS "ReleaseVersion_CoverArt";
 DROP TABLE IF EXISTS "ReleaseVersion_Formats";
 DROP TABLE IF EXISTS "ReleaseVersion_Genres";
@@ -76,7 +77,8 @@ DROP TABLE IF EXISTS "Artist_GroupMembers";
 DROP TABLE IF EXISTS "Artists";
 
 DROP TABLE IF EXISTS "ImageData";
-DROP TABLE IF EXISTS "Styles";
-DROP TABLE IF EXISTS "Genres";
-DROP TABLE IF EXISTS "MediaFormats";
-DROP TABLE IF EXISTS "DataQuality";
+DROP TABLE IF EXISTS "StyleEnum";
+DROP TABLE IF EXISTS "GenreEnum";
+DROP TABLE IF EXISTS "MediaFormatDescriptionEnum";
+DROP TABLE IF EXISTS "MediaFormatEnum";
+DROP TABLE IF EXISTS "DataQualityEnum";

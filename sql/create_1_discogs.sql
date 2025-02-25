@@ -40,8 +40,8 @@
 --     | N..1             N..1              *        *  *
 --     '-------[ Tracks ]-------------------/        |  |
 --                                                   |  |
---                                      [ Genres ]---/  |
---                                         [ Styles ]---/           
+--                                   [ GenreEnum ]---/  |
+--                                      [ StyleEnum ]---/           
 --
 -- The tables are grouped in the following order:
 --   Enumerationss & Assets
@@ -63,15 +63,15 @@
 --
 -- ENUMERATIONS
 --
--- DataQuality
--- MediaFormats
--- Genres
--- Styles
+-- DataQualityEnum
+-- MediaFormatEnum
+-- GenreEnum
+-- StyleEnum
 --
 
 -- An enum table for the latest status of voting on data quality
 -- for artist profiles, releases, release versions and labels.
-CREATE TABLE IF NOT EXISTS "DataQuality" (
+CREATE TABLE IF NOT EXISTS "DataQualityEnum" (
     "dqID"     INTEGER
       PRIMARY KEY
 
@@ -90,32 +90,68 @@ CREATE TABLE IF NOT EXISTS "DataQuality" (
       NOT NULL
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS "DataQuality__Unique"
+ ON DataQualityEnum (quality)
+ ;
+
 -- Enumeration of media formats, attributed to releases.
 -- The Primary Key is arbitrary, it matches insertion order.
-CREATE TABLE IF NOT EXISTS "MediaFormats" (
-    "formatID"  INTEGER
+CREATE TABLE IF NOT EXISTS "MediaFormatEnum" (
+    "formatID"     INTEGER
       PRIMARY KEY
-  , "format"    TEXT
-      NOT NULL
+  , "format"       TEXT
+      NOT NULL       CHECK (format <> "")
+  , "format_abbr"  TEXT
+      NOT NULL       CHECK (format_abbr <> "")
+
+  , "comments"     TEXT
+      NOT NULL       DEFAULT ""
+);
+
+CREATE INDEX IF NOT EXISTS "MediaFormat__Unique"
+  ON MediaFormatEnum (format)
+  ;
+
+-- A media format may have one or more description phrases with it.
+-- No validation is done to ensure combinations make sense (like 12" + CD),
+-- doing so is not sure to be future-proof so the effort is not justified.
+CREATE TABLE IF NOT EXISTS "MediaFormatDescriptionEnum" (
+    "fmt_descID"     INTEGER
+      PRIMARY KEY
+  , "fmt_desc"       TEXT
+      NOT NULL         CHECK (fmt_desc <> "")
+  , "fmt_desc_abbr"  TEXT
+      NOT NULL         CHECK (fmt_desc_abbr <> "")
+
+  , "comments"       TEXT
+      NOT NULL         DEFAULT ""
 );
 
 -- Enumeration of genres, attributed to releases.
 -- The Primary Key is arbitrary, it matches insertion order.
-CREATE TABLE IF NOT EXISTS "Genres" (
+CREATE TABLE IF NOT EXISTS "GenreEnum" (
     "genreID"  INTEGER
       PRIMARY KEY
   , "genre"    TEXT
       NOT NULL
 );
 
+CREATE UNIQUE INDEX IF NOT EXISTS "Genre__Unique"
+  ON GenreEnum (genre)
+  ;
+
 -- Enumeration of styles, attributed to releases and individual tracks.
 -- The Primary Key is arbitrary, it matches insertion order.
-CREATE TABLE IF NOT EXISTS "Styles" (
+CREATE TABLE IF NOT EXISTS "StyleEnum" (
     "styleID"  INTEGER
       PRIMARY KEY
   , "style"    TEXT
       NOT NULL
 );
+
+CREATE UNIQUE INDEX IF NOT EXISTS "Style__Unique"
+  ON StyleEnum (style)
+  ;
 
 --
 -- ASSETS (ImageData)
@@ -174,7 +210,7 @@ CREATE TABLE IF NOT EXISTS "Artists" (
 
   , "data_quality"  INTEGER
       NOT NULL    DEFAULT 0
-      REFERENCES  DataQuality (dqID)
+      REFERENCES  DataQualityEnum (dqID)
       ON DELETE   RESTRICT
       ON UPDATE   RESTRICT
 );
@@ -293,16 +329,14 @@ CREATE TABLE IF NOT EXISTS "Labels" (
 
   , "parentID"      INTEGER
       REFERENCES      Labels (labelID)
-      DEFERRABLE      INITIALLY DEFERRED
       ON DELETE       CASCADE
-      ON UPDATE       RESTRICT
+      DEFERRABLE      INITIALLY DEFERRED
   , "parent_name"   TEXT
 
   , "data_quality"  INTEGER
       NOT NULL        DEFAULT 0
-      REFERENCES      DataQuality (dqID)
+      REFERENCES      DataQualityEnum (dqID)
       ON DELETE       RESTRICT
-      ON UPDATE       RESTRICT
 );
 
 CREATE INDEX IF NOT EXISTS "Label__Parent"
@@ -373,12 +407,12 @@ CREATE TABLE IF NOT EXISTS "Releases" (
   , "year"          INTEGER
   , "main_version"  INTEGER
       NOT NULL        DEFAULT 0
-      -- (FK defined below, after ReleaseVersions table is created)
-      -- REFERENCES   ReleaseVersions (versionID)
+      REFERENCES      ReleaseVersions (versionID)
+      DEFERRABLE      INITIALLY DEFERRED
 
   , "data_quality"  INTEGER
       NOT NULL        DEFAULT 0
-      REFERENCES      DataQuality (dqID)
+      REFERENCES      DataQualityEnum (dqID)
       ON DELETE       RESTRICT
       ON UPDATE       RESTRICT
 );
@@ -428,7 +462,7 @@ CREATE TABLE IF NOT EXISTS "Release_Genres" (
       REFERENCES   Releases (releaseID)
   , "genreID"    INTEGER
       NOT NULL
-      REFERENCES   Genres (genreID)
+      REFERENCES   GenreEnum (genreID)
 
   , PRIMARY KEY ("releaseID", "genreID")
 ) WITHOUT ROWID;
@@ -447,7 +481,7 @@ CREATE TABLE IF NOT EXISTS "Release_Styles" (
       REFERENCES   Releases (releaseID)
   , "styleID"    INTEGER
       NOT NULL
-      REFERENCES   Styles (styleID)
+      REFERENCES   StyleEnum (styleID)
 
   , PRIMARY KEY ("releaseID", "styleID")
 ) WITHOUT ROWID;
@@ -501,18 +535,10 @@ CREATE TABLE IF NOT  EXISTS "ReleaseVersions" (
 
   , "data_quality"   INTEGER
       NOT NULL         DEFAULT 0 -- "needs vote"
-      REFERENCES       DataQuality (dqID)
+      REFERENCES       DataQualityEnum (dqID)
       ON DELETE        RESTRICT
       ON UPDATE        RESTRICT
 );
-
--- Add the FK relation for each Release's main version.
-ALTER TABLE Releases
-  ADD CONSTRAINT "releases_fk_main_version"
-  FOREIGN KEY (main_version)
-  REFERENCES ReleaseVersions (versionID)
-  DEFERRABLE  INITIALLY DEFERRED
-  ;
 
 CREATE INDEX IF NOT EXISTS "ReleaseVersion__Release"
   ON ReleaseVersions (releaseID)
@@ -573,7 +599,7 @@ CREATE TABLE IF NOT EXISTS "ReleaseVersion_Genres" (
       ON DELETE   CASCADE
   , "genreID"       INTEGER
       NOT NULL
-      REFERENCES  Genres (genreID)
+      REFERENCES  GenreEnum (genreID)
       ON DELETE   RESTRICT
       ON UPDATE   RESTRICT
   
@@ -621,10 +647,7 @@ CREATE TABLE IF NOT EXISTS "ReleaseVersion_CoverArt" (
       REFERENCES      Images (imageID)
 
   , "back_sleeve"   INTEGER
-      REFERENCES      Images (imageID)
-  , "media_A"       INTEGER
-      REFERENCES      Images (imageID)
-  , "media_B"       INTEGER
+      NOT NULL        DEFAULT 0
       REFERENCES      Images (imageID)
 
   , PRIMARY KEY ("versionID", "front_sleeve")
@@ -640,15 +663,22 @@ CREATE INDEX IF NOT EXISTS "CoverArt__BackSleeve"
   ON ReleaseVersion_CoverArt (back_sleeve)
   WHERE (back_sleeve <> 0)
   ;
-CREATE INDEX IF NOT EXISTS "CoverArt__MediaA"
-  ON ReleaseVersion_CoverArt (media_A)
-  WHERE (media_A <> 0)
-  ;
-CREATE INDEX IF NOT EXISTS "CoverArt__MediaB"
-  ON ReleaseVersion_CoverArt (media_B)
-  WHERE (media_B <> 0)
-  ;
 
+
+-- Many-to-many relation for images appearing on the media
+-- (sometimes shared between release versions).
+CREATE TABLE IF NOT EXISTS "ReleaseVersion_MediaArt" (
+    "versionID"       INTEGER
+      NOT NULL          CHECK (versionID <> 0)
+  , "media_img"       INTEGER
+      REFERENCES      Images (imageID)
+  , PRIMARY KEY ("versionID", "media_img")
+) WITHOUT ROWID;
+
+CREATE INDEX IF NOT EXISTS "MediaArt__ReleaseVersion"
+  ON ReleaseVersion_MediaArt (versionID)
+  WHERE (media_img <> 0)
+  ;
 
 --
 -- TRACKS AND TRACKLISTS
@@ -677,11 +707,11 @@ CREATE TABLE IF NOT EXISTS "Tracks" (
   , "duration"      TEXT
 );
 
-CREATE UNIQUE INDEX IF NOT EXISTS "Track__Unique"
-  ON ReleaseVersion_Tracks (versionID, track_number)
+CREATE UNIQUE INDEX IF NOT EXISTS "Track__UniqueTrackNumber"
+  ON Tracks (versionID, track_number)
   ;
-CREATE INDEX IF NOT EXISTS "Track__Tracklist"
-  ON ReleaseVersion_Tracks (versionID)
+CREATE INDEX IF NOT EXISTS "Track__ReleaseVersion"
+  ON Tracks (versionID)
   ;
 
 
@@ -720,15 +750,15 @@ CREATE TABLE IF NOT EXISTS "Track_Styles" (
       ON DELETE       CASCADE
   , "styleID"       INTEGER
       NOT NULL
-      REFERENCES      Styles (styleID)
+      REFERENCES      StyleEnum (styleID)
       ON DELETE       RESTRICT
 
   , PRIMARY KEY ("trackID", "styleID")
 ) WITHOUT ROWID;
 
-CREATE INDEX IF NOT EXISTS "Track__Style"
-  ON Track_Styles (styleID)
-  ;
 CREATE INDEX IF NOT EXISTS "Style__Track"
   ON Track_Styles (trackID)
+  ;
+CREATE INDEX IF NOT EXISTS "Track__Style"
+  ON Track_Styles (styleID)
   ;

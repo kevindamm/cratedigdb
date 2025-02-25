@@ -88,13 +88,20 @@ DROP INDEX IF EXISTS "Format__ReleaseVersion";
 DROP INDEX IF EXISTS "CoverArt__Version";
 DROP INDEX IF EXISTS "CoverArt__FrontSleeve";
 DROP INDEX IF EXISTS "CoverArt__BackSleeve";
-DROP INDEX IF EXISTS "CoverArt__MediaA";
-DROP INDEX IF EXISTS "CoverArt__MediaB";
+DROP INDEX IF EXISTS "MediaArt__ReleaseVersion";
 
 -- tracks
-DROP INDEX IF EXISTS "Track__Unique";
-DROP INDEX IF EXISTS "Track__Tracklist";
+DROP INDEX IF EXISTS "Track__UniqueTrackNumber";
+DROP INDEX IF EXISTS "Track__ReleaseVersion";
+
 DROP INDEX IF EXISTS "Artist__Track";
 DROP INDEX IF EXISTS "Track__Artist";
 DROP INDEX IF EXISTS "Style__Track";
 DROP INDEX IF EXISTS "Track__Style";
+
+-- enums
+DROP INDEX IF EXISTS "DataQuality__Unique";
+DROP INDEX IF EXISTS "MediaFormat__Unique";
+DROP INDEX IF EXISTS "Genre__Unique";
+DROP INDEX IF EXISTS "Style__Unique";
+DROP INDEX IF EXISTS "Image__SHA1";
